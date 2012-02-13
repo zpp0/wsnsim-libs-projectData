@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="0.3.7">
+
+  <!--
+      table of contents
+      1. projectInfo
+      2. pluginsParams
+      3. events
+      4. logFiles
+  -->
+
+  <projectInfo>
+    <author>I</author>
+    <name>test</name>
+    <comment>ASDsdfgsdfgsdfsdf</comment>
+    <usedPlugins>
+      <plugin ID="0" namespace="env/asd" name="1" version="2" />
+      <!-- ID is service information for projectParams lib, don't manipulate this manualy -->
+      <!-- real plugin path - /../programm_path/Plugins/env/asd/1/_?_plugin1_2.so_?_ -->
+      <plugin ID="1" namespace="log" name="binary" version="0.1" />
+      <plugin ID="2" namespace="not-log" name="binary" version="0.1" />
+    </usedPlugins>
+  </projectInfo>
+
+  <pluginsParams>
+    <plugin namespace="env/asd" name="1" version="2">
+      <ID>1</ID>
+      <X>100</X>
+    </plugin>
+    <plugin namespace="log" name="binary" version="0.1">
+      <file>/asdasd/asdasd/asdasd/.as dasd/</file>
+      <enabledEvents>
+        <event name="wft" />
+        <event name="something good event" />
+      </enabledEvents>
+    </plugin>
+    <plugin namespace="not-log" name="binary" version="0.1">
+      <shit>123</shit>
+    </plugin>
+  </pluginsParams>
+
+  <!-- obtained from all plugins -->
+  <events>
+    <pluginsEvents>
+      <event ID="0" name="very very bad event" group="MAC">
+        <!-- time, ?nodeID?, then -->
+        <argument ID="0" name="asd" type="QString" />
+        <!-- type from QMetaType -->
+        <argument ID="1" name="asd2" type="QObjectStar" />
+      </event>
+      <event ID="1" name="wtf" group="env">
+        <argument ID="0" name="usual crap" type="ULong" />
+      </event>
+    </pluginsEvents>
+    <userEvents>
+      <!-- <event ID="2" name="something good event" group="APL"> -->
+      <!-- there are in APL group only -->
+      <event ID="2" name="something good event">
+        <argument ID="0" name="true" type="QByteArray" />
+      </event>
+      <event ID="3" name="not as good as something good event but better than very very bad event event"/>
+    </userEvents>
+  </events>
+
+  <logFiles>
+    <!-- obtained from the binary log plugin -->
+    <logFile ID="0" file="asdasdasdasdasd1.bin" formatName="binary" formatVersion="1" />
+    <logFile ID="1" file="asdasdasdasdasd2.csv" formatName="text" formatVersion="2" />
+  </logFiles>
+
+</project>
