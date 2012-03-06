@@ -8,18 +8,7 @@
 #ifndef PROJECTPARAMS_H
 #define PROJECTPARAMS_H
 
-#idndef PROJECTPARAMS_VERSION
-#warning : Project Params lib version undefined!
-#define PROJECTPARAMS_VERSION ""
-#endif
-
-// #include <QtCore>
-#include <QVector>
-#include <QMap>
-#include <QString>
-#include <QVariant>
-#include <QList>
-#include <QPointer>
+#include <QtCore>
 
 /**
  *
@@ -36,13 +25,16 @@
  *    attributeName="version" attributeValue="2"
  *
  **/
-typedef PluginInfo QMap<QString, QString>;
-typedef EventInfo QMap<QString, QString>;
-typedef logFileInfo QMap<QString, QString>;
-typedef EventArgument QMap<QString, QString>;
+// TODO: rename to GeneralInfo?
+typedef QMap<QString, QString> Info;
+typedef Info PluginInfo;
+typedef Info EventInfo;
+typedef Info LogFileInfo;
+typedef Info EventArgument;
 
-class ProjectInfo : public QObject {
-    Q_OBJECT
+class ProjectInfo
+{
+    // Q_OBJECT
 public:
     // name of the author of the project
     QString projectAutor;
@@ -51,91 +43,61 @@ public:
     // comment of the project
     QString projectComment;
     // used plugins
-    QList<QPointer<PluginInfo> > usedPlugins;
+    QList<PluginInfo> usedPlugins;
 };    
 
-class PluginParams : public QObject {
-    Q_OBJECT
+class PluginParams
+{
+    // Q_OBJECT
 public:
     // plugin info
-    PluginInfo info;
+    PluginInfo pluginInfo;
     // plugin data
+    // TODO: check how it works
     QVariantMap params;
 };
 
-class EventParams : public QObject {
-    Q_OBJECT
+class EventParams
+{
+    // Q_OBJECT
 public:
+    // EventParams(){};
     // event info
-    EventInfo info;
+    EventInfo eventInfo;
     // event arguments
-    QList<QPointer<EventArgument> > arguments;
+    QList<EventArgument> arguments;
 };
 
-class LogFile : public QObject {
-    Q_OBJECT
-public:
-    logFileInfo info;
-};
+class Events
+{
+    // Q_OBJECT
 
-class Events : public QObject {
-    Q_OBJECT
 public:
     // params
-    // TODO: check how it works
-    QList<QPointer<EventParams> > pluginsEvents;
-    QList<QPointer<EventParams> > userEvents;
+    QList<EventParams> pluginsEvents;
+    QList<EventParams> userEvents;
 };
+
+// class LogFile
+// {
+//     Q_OBJECT
+// public:
+//     LogFileInfo info;
+// };
 
 // agregator
-class ProjectParams : public QObject {
-    Q_OBJECT
+// class ProjectParams : public QObject 
+class ProjectParams 
+{
+    // Q_OBJECT
 public:
     QString version;
-    QPointer<ProjectInfo> projectInfo;
-    QList<QPointer<PluginParams> > pluginsParams;
-    QPointer<Events> events;
-    QList<QPointer<LogFile> > logFiles;
-};
-
-typedef errorList QList<QStringList>;
-
-/**
- *
- * Класс для работы с файлом проекта симулятора
- *
- **/
-
-class projectParams : public QObject {
-    Q_OBJECT
-public:
-
-    // конструктор
-    projectParams();
-
-    errorList load(QString& projectFileName);
-    QPointer<ProjectParams> getParams();
-
-    void setParams(QPointer<ProjectParams> params);
-
-private:
-
-    // // загрузка информации о проекте из файла проекта в 
-    // // возвращает код ошибки
-    // void loadProjectInfo();
-
-    // // загрузка параметров плагина из файла проекта
-    // // аргумент - имя плагина
-    // void loadPluginParams(QString& pluginNamespace, QString& pluginName, QString& pluginVersion);
-
-    // void loadPluginParams(QString& pluginNamespace, QString& pluginName, QString& pluginVersion);
-
-    // void voidErrorHandler(QString& paramsName, QString& error);
-
-    QString m_projectFileName;
-
-    static const QString m_version = PROJECTPARAMS_VERSION;
-    
+    ProjectInfo projectInfo;
+    QList<PluginParams> pluginsParams;
+    Events events;
+    QList<LogFileInfo> logFiles;
+// private:
+    // Q_DISABLE_COPY(ProjectParams)
 };
 
 #endif // PROJECTPARAMS_H

@@ -1,71 +1,114 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project version="0.3.7">
-
-  <!--
-      table of contents
-      1. projectInfo
-      2. pluginsParams
-      3. events
-      4. logFiles
-  -->
+<project version="0.4.2">
 
   <projectInfo>
     <author>I</author>
     <name>test</name>
-    <comment>ASDsdfgsdfgsdfsdf</comment>
-    <usedPlugins>
-      <plugin ID="0" namespace="env/asd" name="1" version="2" />
-      <!-- ID is service information for projectParams lib, don't manipulate this manualy -->
-      <!-- real plugin path - /../programm_path/Plugins/env/asd/1/_?_plugin1_2.so_?_ -->
-      <plugin ID="1" namespace="log" name="binary" version="0.1" />
-      <plugin ID="2" namespace="not-log" name="binary" version="0.1" />
-    </usedPlugins>
+    <comments>ASDsdfgsdfgsdfsdf</comments>
+    <keywords>test example</keywords>
+    <saveVersion>12</saveVersion>
+    <modify>11.11.2011 11:11:11</modify>
   </projectInfo>
 
-  <pluginsParams>
-    <plugin namespace="env/asd" name="1" version="2">
-      <ID>1</ID>
-      <X>100</X>
-    </plugin>
-    <plugin namespace="log" name="binary" version="0.1">
-      <file>/asdasd/asdasd/asdasd/.as dasd/</file>
-      <enabledEvents>
-        <event name="wft" />
-        <event name="something good event" />
-      </enabledEvents>
-    </plugin>
-    <plugin namespace="not-log" name="binary" version="0.1">
-      <shit>123</shit>
-    </plugin>
-  </pluginsParams>
+  <!-- <programm ID="0" lang="lua">coordinator.lua</programm> -->
+  <!-- <programm ID="1" lang="cpp">slave.so</programm> -->
 
-  <!-- obtained from all plugins -->
+  <!-- <modules> -->
+  <!--   <module ID="0" type="software" lang="lua">MAC802_15_4.lua</module> -->
+  <!--   <module ID="1" type="software" lang="lua">NWK_tree.lua</module> -->
+  <!--   <module ID="2" type="hardware" lang="cpp">atmega128.so</module> -->
+  <!--   <module ID="3" type="hardware" lang="lua">timer.lua</module> -->
+  <!--   <module ID="4" type="hardware" lang="cpp">sensor.so</module> -->
+  <!--   <module ID="5" type="hardware" lang="cpp">sensor.so</module> -->
+  <!--   <module ID="6" type="hardware" lang="cpp">cc2420.so</module> -->
+  <!--   <module ID="7" type="environment" lang="cpp">radioChannel.so</module> -->
+  <!--   <module ID="8" type="environment" lang="cpp">scene.so</module> -->
+  <!--   <module ID="9" type="environment" lang="lua">temperature.lua</module> -->
+  <!--   <module ID="10" type="environment" lang="lua">illuminance.lua</module> -->
+  <!--   <module ID="11" type="log event" lang="cpp">binaryLog.so</module> -->
+  <!-- </modules> -->
+
+  <!-- <hardwareList> -->
+  <!--   <hardware ID="0"> -->
+  <!--     <module ID="2" /> -->
+  <!--     <module ID="3" /> -->
+  <!--     <module ID="4" /> -->
+  <!--     <module ID="6" /> -->
+  <!--   </hardware> -->
+  <!--   <hardware ID="1"> -->
+  <!--     <module ID="2" /> -->
+  <!--     <module ID="3" /> -->
+  <!--     <module ID="5" /> -->
+  <!--     <module ID="6" /> -->
+  <!--   </hardware> -->
+  <!-- </hardwareList> -->
+
+  <!-- <coonfiguration> -->
+  <!--   <config> -->
+  <!--     <module ID="4" /> -->
+  <!--     <module ID="9" /> -->
+  <!--   </config> -->
+  <!--   <config> -->
+  <!--     <module ID="5" /> -->
+  <!--     <module ID="10" /> -->
+  <!--   </config> -->
+  <!-- </coonfiguration> -->
+
+  <!-- <\!-- <software> -\-> -->
+  <!-- <\!--   <module ID="0" lang="lua">MAC802.15.4</module> -\-> -->
+  <!-- <\!--   <module ID="1" lang="lua">NWK_tree</module> -\-> -->
+  <!-- <\!-- </software> -\-> -->
+
+  <!-- <nodes> -->
+  <!--   <node ID="0" hardwareID="0" softwareID="1" /> -->
+  <!--   <node ID="1" hardwareID="0" softwareID="1" /> -->
+  <!--   <node ID="2" hardwareID="0" softwareID="1" /> -->
+  <!--   <node ID="3" hardwareID="1" softwareID="1" /> -->
+  <!--   <node ID="4" hardwareID="1" softwareID="1" /> -->
+  <!--   <node ID="5" hardwareID="1" softwareID="0" /> -->
+  <!-- </nodes> -->
+
+  <!-- <modulesParams> -->
+  <!--   <module ID="5"> -->
+  <!--     <param name="tx-power" type="">31</param> -->
+  <!--     <param> -->
+  <!--       <name>rx-sensivity</name> -->
+  <!--       <value>-98</value> -->
+  <!--     </param> -->
+  <!--   </module> -->
+  <!--   <module ID="7"> -->
+  <!--     <param> -->
+  <!--       <name>distribution</name> -->
+  <!--       <value>Uniformrandom</value> -->
+  <!--     </param> -->
+  <!--   </module> -->
+  <!-- </modulesParams> -->
+
   <events>
     <pluginsEvents>
       <event ID="0" name="very very bad event" group="MAC">
-        <!-- time, ?nodeID?, then -->
-        <argument ID="0" name="asd" type="QString" />
-        <!-- type from QMetaType -->
-        <argument ID="1" name="asd2" type="QObjectStar" />
+        <argument ID="0" name="nodeID" type="uint16" />
+        <argument ID="1" name="coord x" type="double" />
+        <argument ID="2" name="coord y" type="double" />
+        <argument ID="3" name="coord z" type="double" />
       </event>
-      <event ID="1" name="wtf" group="env">
-        <argument ID="0" name="usual crap" type="ULong" />
+      <event ID="1" name="turn on" group="env">
+        <argument ID="0" name="nodeID" type="uint16" />
       </event>
     </pluginsEvents>
     <userEvents>
       <!-- <event ID="2" name="something good event" group="APL"> -->
       <!-- there are in APL group only -->
       <event ID="2" name="something good event">
-        <argument ID="0" name="true" type="QByteArray" />
+        <argument ID="0" name="message" type="QByteArray" />
       </event>
       <event ID="3" name="not as good as something good event but better than very very bad event event"/>
     </userEvents>
   </events>
 
   <logFiles>
-    <!-- obtained from the binary log plugin -->
-    <logFile ID="0" file="asdasdasdasdasd1.bin" formatName="binary" formatVersion="1" />
-    <logFile ID="1" file="asdasdasdasdasd2.csv" formatName="text" formatVersion="2" />
+    <logFile ID="0" file="log_11-11_10:14.bin" />
+    <logFile ID="1" file="log_11-11_11:20.bin" />
   </logFiles>
 
 </project>
