@@ -22,7 +22,7 @@ ProjectData::ProjectData()
     version = PROJECTDATA_VERSION;
 }
 
-ProjectParams ProjectData::load(QString& projectFileName, QString* errorMessage, bool loadPluginParams) {
+ProjectParams ProjectData::load(QString& projectFileName, QString* errorMessage) {
 
     ProjectParams projectParams;
 
@@ -42,7 +42,7 @@ ProjectParams ProjectData::load(QString& projectFileName, QString* errorMessage,
 #ifdef PROJECTDATA_DEBUG
         // TODO: generate more readable message
         qDebug("Error open file: %s", qPrintable(file.error()));
-        *errorMessage = QString::number(file.error);
+        *errorMessage = QString::number(file.error());
 #endif
 
         return projectParams;        
@@ -75,10 +75,6 @@ ProjectParams ProjectData::load(QString& projectFileName, QString* errorMessage,
         if (dn_node.nodeName() == "projectInfo")
             projectParams.projectInfo = loadProjectInfo(dn_node);
 
-        if (dn_node.nodeName() == "pluginsParams")
-            if (loadPluginParams)
-                projectParams.pluginsParams = loadPluginsParams(dn_node);
-
         if (dn_node.nodeName() == "events")
             projectParams.events = loadEvents(dn_node);
 
@@ -106,59 +102,53 @@ ProjectInfo ProjectData::loadProjectInfo(QDomNode dn_node)
         if (dn_nextNode.nodeName () == "author")
             projectInfo.projectAutor = dn_nextNode.toElement().text();
 
-        if (dn_nextNode.nodeName () == "name")
-            projectInfo.projectName = dn_nextNode.toElement().text();
+        if (dn_nextNode.nodeName () == "title")
+            projectInfo.projectTitle = dn_nextNode.toElement().text();
 
         if (dn_nextNode.nodeName() == "comment")
             projectInfo.projectComment = dn_nextNode.toElement().text();
 
-        if (dn_nextNode.nodeName() == "usedPlugins") {
-            QDomNode dn_usedPlugins = dn_nextNode.firstChild();
+        if (dn_nextNode.nodeName() == "keywords")
+            projectInfo.keywords = dn_nextNode.toElement().text().split(" ");
 
-            // распознаем дочерние узлы, пока они не закончатся
-            while (!dn_usedPlugins.isNull()) {
+        if (dn_nextNode.nodeName() == "revision")
+            projectInfo.revision = dn_nextNode.toElement().text().toInt();
 
-                if (dn_usedPlugins.nodeName() == "plugin")
-                    projectInfo.usedPlugins += loadInfo(dn_usedPlugins);
+        if (dn_nextNode.nodeName() == "modified")
+            projectInfo.modified = dn_nextNode.toElement().text().toInt();
 
-                dn_usedPlugins = dn_usedPlugins.nextSibling();
-            }
-        }
-        
         // переходим к следующему узлу
         dn_nextNode = dn_nextNode.nextSibling();
     }
 
 #ifdef PROJECTDATA_DEBUG
+    qDebug("-- projectInfo --");
     qDebug("projectAutor is %s", qPrintable(projectInfo.projectAutor)); 
-    qDebug("projectName is %s", qPrintable(projectInfo.projectName)); 
+    qDebug("projectTitle is %s", qPrintable(projectInfo.projectTitle)); 
     qDebug("projectComment is %s", qPrintable(projectInfo.projectComment)); 
-    
-    foreach (PluginInfo pluginInfo, projectInfo.usedPlugins) {
-        foreach (QString key, pluginInfo.keys()) {
-            qDebug("%s is %s", qPrintable(key), qPrintable(pluginInfo[key]));
-        }
-    }
+    foreach(QString keyword, projectInfo.keywords)
+        qDebug("keyword is %s", qPrintable(keyword)); 
+    qDebug("revision number is %i", projectInfo.revision); 
+    qDebug("last modified at %llu", projectInfo.modified); 
 #endif
 
     // возвращаем результат
     return projectInfo;
 }
 
-PluginParams ProjectData::loadPluginParams(QDomNode dn_node) {
-    PluginParams pluginParams;
-    pluginParams.pluginInfo = loadInfo(dn_node);
-    // TODO: write it
-    return pluginParams;
-}
+// PluginParams ProjectData::loadPluginParams(QDomNode dn_node) {
+//     PluginParams pluginParams;
+//     pluginParams.pluginInfo = loadInfo(dn_node);
+//     // TODO: write it
+//     return pluginParams;
+// }
 
-QList<PluginParams> ProjectData::loadPluginsParams(QDomNode dn_node) 
-{
-    QList<PluginParams> pluginParams;
-    // TODO: write it
-    return pluginParams;
-    
-}
+// QList<PluginParams> ProjectData::loadPluginsParams(QDomNode dn_node) 
+// {
+//     QList<PluginParams> pluginParams;
+//     // TODO: write it
+//     return pluginParams;
+// }
 
 EventParams ProjectData::loadEventParams(QDomNode dn_node)
 {
@@ -189,14 +179,14 @@ Events ProjectData::loadEvents(QDomNode dn_node)
     while (!dn_nextNode.isNull ()) {
 
         // TODO: make it easy
-        if (dn_nextNode.nodeName() == "pluginEvents") {
+        if (dn_nextNode.nodeName() == "systemEvents") {
             QDomNode dn_pluginEvents = dn_nextNode.firstChild();
 
             // распознаем дочерние узлы, пока они не закончатся
             while (!dn_pluginEvents.isNull()) {
 
                 if (dn_pluginEvents.nodeName() == "event")
-                    events.pluginsEvents += loadEventParams(dn_pluginEvents);
+                    events.systemEvents += loadEventParams(dn_pluginEvents);
 
                 dn_pluginEvents = dn_pluginEvents.nextSibling();
             }
@@ -221,27 +211,33 @@ Events ProjectData::loadEvents(QDomNode dn_node)
 
 #ifdef PROJECTDATA_DEBUG
     // TODO: remove this copy-paste
-    foreach (EventParams eventParams, events.pluginsEvents) {
+    qDebug("-- system Events --");
+    foreach (EventParams eventParams, events.systemEvents) {
         foreach (QString key, eventParams.eventInfo.keys()) {
             qDebug("%s is %s", qPrintable(key), qPrintable(eventParams.eventInfo[key]));
         }
         
         foreach (EventArgument eventArgument, eventParams.arguments) {
+            qDebug("-- argument");
             foreach (QString key, eventArgument.keys()) {
                 qDebug("%s is %s", qPrintable(key), qPrintable(eventArgument[key]));
             }
         }
+        qDebug("----");
     }
+    qDebug("-- user Events --");
     foreach (EventParams eventParams, events.userEvents) {
         foreach (QString key, eventParams.eventInfo.keys()) {
             qDebug("%s is %s", qPrintable(key), qPrintable(eventParams.eventInfo[key]));
         }
         
         foreach (EventArgument eventArgument, eventParams.arguments) {
+            qDebug("-- argument");
             foreach (QString key, eventArgument.keys()) {
                 qDebug("%s is %s", qPrintable(key), qPrintable(eventArgument[key]));
             }
         }
+        qDebug("----");
     }
 #endif
 
@@ -266,10 +262,12 @@ QList<LogFileInfo> ProjectData::loadLogFiles(QDomNode dn_node)
     }
 
 #ifdef PROJECTDATA_DEBUG
+    qDebug("-- log Files --");
     foreach (LogFileInfo logFileInfo, logFiles) {
         foreach (QString key, logFileInfo.keys()) {
             qDebug("%s is %s", qPrintable(key), qPrintable(logFileInfo[key]));
         }
+        qDebug("----");
     }
 #endif
 
@@ -278,9 +276,9 @@ QList<LogFileInfo> ProjectData::loadLogFiles(QDomNode dn_node)
     return logFiles;
 }
 
-Info ProjectData::loadInfo(QDomNode dn_node)
+AttrInfo ProjectData::loadInfo(QDomNode dn_node)
 {
-    Info info;
+    AttrInfo info;
 
     if (dn_node.hasAttributes()) {
         
@@ -293,4 +291,11 @@ Info ProjectData::loadInfo(QDomNode dn_node)
     }
 
     return info;
+}
+
+extern "C" MY_EXPORT ProjectParams load(QString& projectFileName, QString* errorMessage)
+{
+    ProjectData projectData;
+    return projectData.load(projectFileName, errorMessage);
+    // return (a + b) / 2;
 }

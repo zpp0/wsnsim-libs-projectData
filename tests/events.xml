@@ -7,11 +7,11 @@
     <comment></comment>
     <keywords>test example</keywords>
     <revision>1</revision>
-    <modified>06.03.2012 15:57:13</modified>
+    <modified>1234567890</modified>
   </projectInfo>
 
   <events>
-    <pluginsEvents>
+    <systemEvents>
       <event ID="0" name="node on" group="PHY">
         <argument ID="0" name="nodeID" type="uint16" />
       </event>
@@ -54,14 +54,14 @@
         <argument ID="0" name="nodeID" type="uint16" />
         <argument ID="1" name="nodeID2" type="uint16" />
       </event>
-    </pluginsEvents>
+    </systemEvents>
     <userEvents>
     </userEvents>
   </events>
 
   <logFiles>
-    <logFile ID="0">log_11-11_10:14.bin</logFile>
-    <logFile ID="1">log_11-11_11:20.bin</logFile>
+    <logFile ID="0" name="log_1.bin" />
+    <logFile ID="1" name="log_2.bin" />
   </logFiles>
 
 </project>

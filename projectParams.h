@@ -16,21 +16,20 @@
  *    For example:
  *    --  project.xml  --
  *    ...
- *          <plugin ID="0" namespace="env/asd" name="1" version="2" />
+ *                  <argument ID="0" name="nodeID" type="uint16" />
  *    ...
  *    -- value of the structure is --
  *    attributeName="ID" attributeValue="0"
- *    attributeName="namespace" attributeValue="env/asd"
- *    attributeName="name" attributeValue="1"
- *    attributeName="version" attributeValue="2"
+ *    attributeName="name" attributeValue="nodeID"
+ *    attributeName="type" attributeValue="uint16"
  *
  **/
-// TODO: rename to GeneralInfo?
-typedef QMap<QString, QString> Info;
-typedef Info PluginInfo;
-typedef Info EventInfo;
-typedef Info LogFileInfo;
-typedef Info EventArgument;
+// TODO: rename?
+typedef QMap<QString, QString> AttrInfo;
+// typedef AttrInfo PluginInfo;
+typedef AttrInfo EventInfo;
+typedef AttrInfo LogFileInfo;
+typedef AttrInfo EventArgument;
 
 class ProjectInfo
 {
@@ -38,66 +37,82 @@ class ProjectInfo
 public:
     // name of the author of the project
     QString projectAutor;
-    // name of the project
-    QString projectName;
+    // title of the project
+    QString projectTitle;
     // comment of the project
     QString projectComment;
-    // used plugins
-    QList<PluginInfo> usedPlugins;
+
+    QStringList keywords;
+
+    // saves count
+    int revision;
+
+    // last modified in unix-time
+    quint64 modified;
 };    
 
-class PluginParams
-{
-    // Q_OBJECT
-public:
-    // plugin info
-    PluginInfo pluginInfo;
-    // plugin data
-    // TODO: check how it works
-    QVariantMap params;
-};
+// TODO: do this
+// class PluginParams
+// {
+//     // Q_OBJECT
+// public:
+//     // plugin info
+//     PluginInfo pluginInfo;
+//     // plugin data
+//     // TODO: check how it works
+//     QVariantMap params;
+// };
 
+
+/**
+ *
+ * Template EventParams
+ *    <event ID="?1" name="?2" group="?3">
+ *      <argument ID="?4" name="?5" type="?6" />
+ *      ...
+ *    </event>
+ *
+ *    Both ID type is uint8
+ *    TODO: write about other types, about type attr values, about numbering of events
+ *
+ **/
 class EventParams
 {
-    // Q_OBJECT
 public:
-    // EventParams(){};
     // event info
     EventInfo eventInfo;
     // event arguments
     QList<EventArgument> arguments;
 };
 
+/**
+ *
+ * Events agregator
+ * Contains lists of system and users events
+ *
+ **/
 class Events
 {
-    // Q_OBJECT
-
 public:
     // params
-    QList<EventParams> pluginsEvents;
+    QList<EventParams> systemEvents;
     QList<EventParams> userEvents;
 };
 
-// class LogFile
-// {
-//     Q_OBJECT
-// public:
-//     LogFileInfo info;
-// };
-
-// agregator
-// class ProjectParams : public QObject 
+/**
+ *
+ * Project params agregator
+ * Contains project information, events and log files
+ *
+ **/
 class ProjectParams 
 {
-    // Q_OBJECT
 public:
     QString version;
     ProjectInfo projectInfo;
-    QList<PluginParams> pluginsParams;
+    // QList<PluginParams> pluginsParams;
     Events events;
     QList<LogFileInfo> logFiles;
-// private:
-    // Q_DISABLE_COPY(ProjectParams)
 };
 
 #endif // PROJECTPARAMS_H

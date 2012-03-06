@@ -26,19 +26,21 @@ public:
     // конструктор
     ProjectData();
 
-    ProjectParams load(QString& projectFileName, QString* errorMessage, bool loadPluginParams);
-    QFile::FileError create(QString& projectFileName, ProjectParams params);
+    ProjectParams load(QString& projectFileName, QString* errorMessage);
 
     QString version;
 
+    // TODO: do it
+    // QFile::FileError create(QString& projectFileName, ProjectParams params);
+
 private:
 
-    Info loadInfo(QDomNode dn_node);
+    AttrInfo loadInfo(QDomNode dn_node);
     
     ProjectInfo loadProjectInfo(QDomNode dn_node);
 
-    PluginParams loadPluginParams(QDomNode dn_node);
-    QList<PluginParams> loadPluginsParams(QDomNode dn_node);
+    // PluginParams loadPluginParams(QDomNode dn_node);
+    // QList<PluginParams> loadPluginsParams(QDomNode dn_node);
     
     EventParams loadEventParams(QDomNode dn_node);
     Events loadEvents(QDomNode dn_node);
@@ -46,5 +48,13 @@ private:
     QList<LogFileInfo> loadLogFiles(QDomNode dn_node);
 
 };
+
+#ifdef Q_WS_WIN
+#define MY_EXPORT __declspec(dllexport)
+#else
+#define MY_EXPORT
+#endif
+
+extern "C" MY_EXPORT ProjectParams load(QString& projectFileName, QString* errorMessage);
 
 #endif // PROJECTDATA_H
