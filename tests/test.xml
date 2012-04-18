@@ -1,88 +1,74 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project version="0.4.2">
+<project version="0.5.1">
 
   <projectInfo>
-    <author>I</author>
-    <name>test</name>
-    <comments>ASDsdfgsdfgsdfsdf</comments>
+    <author>Yarygin Alexander</author>
+    <title>Test Project</title>
+    <comment></comment>
     <keywords>test example</keywords>
-    <saveVersion>12</saveVersion>
-    <modify>11.11.2011 11:11:11</modify>
+    <revision>1</revision>
+    <modified>1234567890</modified>
   </projectInfo>
 
-  <!-- <programm ID="0" lang="lua">coordinator.lua</programm> -->
-  <!-- <programm ID="1" lang="cpp">slave.so</programm> -->
+  <simulatorParams>
+    <maxTime>123456789012323123</maxTime>
+    <logFile>newLog.bin</logFile>
+  </simulatorParams>
 
-  <!-- <modules> -->
-  <!--   <module ID="0" type="software" lang="lua">MAC802_15_4.lua</module> -->
-  <!--   <module ID="1" type="software" lang="lua">NWK_tree.lua</module> -->
-  <!--   <module ID="2" type="hardware" lang="cpp">atmega128.so</module> -->
-  <!--   <module ID="3" type="hardware" lang="lua">timer.lua</module> -->
-  <!--   <module ID="4" type="hardware" lang="cpp">sensor.so</module> -->
-  <!--   <module ID="5" type="hardware" lang="cpp">sensor.so</module> -->
-  <!--   <module ID="6" type="hardware" lang="cpp">cc2420.so</module> -->
-  <!--   <module ID="7" type="environment" lang="cpp">radioChannel.so</module> -->
-  <!--   <module ID="8" type="environment" lang="cpp">scene.so</module> -->
-  <!--   <module ID="9" type="environment" lang="lua">temperature.lua</module> -->
-  <!--   <module ID="10" type="environment" lang="lua">illuminance.lua</module> -->
-  <!--   <module ID="11" type="log event" lang="cpp">binaryLog.so</module> -->
-  <!-- </modules> -->
+  <environmentList>
+    <module ID="0" lang="cpp">radioChannel.so</module>
+    <module ID="1" lang="cpp">scene.so</module>    
+    <module ID="2" lang="lua">temperature.lua</module>
+    <module ID="3" lang="lua">illuminance.lua</module>
+  </environmentList>
 
-  <!-- <hardwareList> -->
-  <!--   <hardware ID="0"> -->
-  <!--     <module ID="2" /> -->
-  <!--     <module ID="3" /> -->
-  <!--     <module ID="4" /> -->
-  <!--     <module ID="6" /> -->
-  <!--   </hardware> -->
-  <!--   <hardware ID="1"> -->
-  <!--     <module ID="2" /> -->
-  <!--     <module ID="3" /> -->
-  <!--     <module ID="5" /> -->
-  <!--     <module ID="6" /> -->
-  <!--   </hardware> -->
-  <!-- </hardwareList> -->
+  <hardwareList>
+    <hardware name="sbn128">sbn128.xml</hardware>
+    <hardware name="cube">
+      <modules>
+        <module lang="cpp">atmega128.so</module>
+        <module lang="lua">timer.lua</module>
+        <module lang="cpp">sensor.so</module>
+        <module lang="cpp">cc2420.so</module>
+      </modules>
+    </hardware>
+  </hardwareList>
 
-  <!-- <coonfiguration> -->
-  <!--   <config> -->
-  <!--     <module ID="4" /> -->
-  <!--     <module ID="9" /> -->
-  <!--   </config> -->
-  <!--   <config> -->
-  <!--     <module ID="5" /> -->
-  <!--     <module ID="10" /> -->
-  <!--   </config> -->
-  <!-- </coonfiguration> -->
+  <softwareList>
+    <software name="master">
+      <module lang="lua">MAC802.15.4</module>
+      <module lang="lua">NWK_tree</module>
+    </software>
+    <software name="slave">
+      <module lang="lua">MAC802.15.4</module>
+      <module lang="lua">NWK_tree</module>
+    </software>
+  </softwareList>
 
-  <!-- <\!-- <software> -\-> -->
-  <!-- <\!--   <module ID="0" lang="lua">MAC802.15.4</module> -\-> -->
-  <!-- <\!--   <module ID="1" lang="lua">NWK_tree</module> -\-> -->
-  <!-- <\!-- </software> -\-> -->
+  <importInterfaces>
+    <!-- не сработает для программ. Нужно иметь возможность брать интерфейс не только из среды -->
+    <interface hardware="sbn128" name="RadioChannel" ID="3" envID="0" />
+    <interface hardware="sbn128" name="field" ID="2" envID="2" />
+  </importInterfaces>
 
-  <!-- <nodes> -->
-  <!--   <node ID="0" hardwareID="0" softwareID="1" /> -->
-  <!--   <node ID="1" hardwareID="0" softwareID="1" /> -->
-  <!--   <node ID="2" hardwareID="0" softwareID="1" /> -->
-  <!--   <node ID="3" hardwareID="1" softwareID="1" /> -->
-  <!--   <node ID="4" hardwareID="1" softwareID="1" /> -->
-  <!--   <node ID="5" hardwareID="1" softwareID="0" /> -->
-  <!-- </nodes> -->
+  <nodes>
+    <node ID="0" hardware="sbn128" software="slave" />
+    <node ID="1" hardware="sbn128" software="slave" />
+    <node ID="2" hardware="sbn128" software="slave" />
+    <node ID="3" hardware="cube" software="slave" />
+    <node ID="4" hardware="cube" software="master" />
+    <node ID="5" hardware="sbn128" software="master" />
+  </nodes>
 
-  <!-- <modulesParams> -->
-  <!--   <module ID="5"> -->
-  <!--     <param name="tx-power" type="">31</param> -->
-  <!--     <param> -->
-  <!--       <name>rx-sensivity</name> -->
-  <!--       <value>-98</value> -->
-  <!--     </param> -->
-  <!--   </module> -->
-  <!--   <module ID="7"> -->
-  <!--     <param> -->
-  <!--       <name>distribution</name> -->
-  <!--       <value>Uniformrandom</value> -->
-  <!--     </param> -->
-  <!--   </module> -->
-  <!-- </modulesParams> -->
+  <modulesParams>
+    <module ID="5">
+      <param name="tx-power" type="int">31</param>
+      <param name="rx-sensivity" type="int">-98</param>
+    </module>
+    <module ID="7">
+      <param name="distribution" type="String">Uniformrandom</param>
+    </module>
+  </modulesParams>
 
   <events>
     <pluginsEvents>
@@ -97,8 +83,6 @@
       </event>
     </pluginsEvents>
     <userEvents>
-      <!-- <event ID="2" name="something good event" group="APL"> -->
-      <!-- there are in APL group only -->
       <event ID="2" name="something good event">
         <argument ID="0" name="message" type="QByteArray" />
       </event>

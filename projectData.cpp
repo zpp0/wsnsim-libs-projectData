@@ -78,12 +78,22 @@ ProjectParams ProjectData::load(QString& projectFileName, QString* errorMessage)
         if (dn_node.nodeName() == "events")
             projectParams.events = loadEvents(dn_node);
 
+        if (dn_node.nodeName() == "modulesParams")
+            projectParams.modulesParams = loadModulesParams(dn_node);
+
+        if (dn_node.nodeName() == "simulatorParams")
+            projectParams.simulatorParams = loadSimulatorParams(dn_node);
+
         if (dn_node.nodeName() == "logFiles")
             projectParams.logFiles = loadLogFiles(dn_node);
 
         // переходим к следующему узлу XML
         dn_node = dn_node.nextSibling();
     }
+
+#ifdef PROJECTDATA_DEBUG
+    qDebug("end");
+#endif
 
     // возвращаем результат
     return projectParams;
@@ -96,13 +106,12 @@ ProjectInfo ProjectData::loadProjectInfo(QDomNode dn_node)
     QDomNode dn_nextNode = dn_node.firstChild();
 
     // перебираем узлы, пока не закончатся
-    while (!dn_nextNode.isNull ()) {
+    while (!dn_nextNode.isNull()) {
 
-        // узел - version
-        if (dn_nextNode.nodeName () == "author")
+        if (dn_nextNode.nodeName() == "author")
             projectInfo.projectAutor = dn_nextNode.toElement().text();
 
-        if (dn_nextNode.nodeName () == "title")
+        if (dn_nextNode.nodeName() == "title")
             projectInfo.projectTitle = dn_nextNode.toElement().text();
 
         if (dn_nextNode.nodeName() == "comment")
@@ -271,7 +280,6 @@ QList<LogFileInfo> ProjectData::loadLogFiles(QDomNode dn_node)
     }
 #endif
 
-
     // возвращаем результат
     return logFiles;
 }
@@ -293,9 +301,119 @@ AttrInfo ProjectData::loadInfo(QDomNode dn_node)
     return info;
 }
 
+QList<ModuleParams> ProjectData::loadModulesParams(QDomNode dn_node)
+{
+    QList<ModuleParams> params;
+
+    QDomNode dn_nextNode = dn_node.firstChild();
+
+    // перебираем узлы, пока не закончатся
+    while (!dn_nextNode.isNull()) {
+
+        // узел - version
+        if (dn_nextNode.nodeName() == "module") {
+            ModuleParams moduleParams;
+
+            QDomNamedNodeMap attributes = dn_nextNode.attributes();
+
+            // FIXME: do smt with it
+            // for (uint index = 0; index < attributes.length(); index++) {
+            QDomAttr attr = attributes.item(0).toAttr();
+            // info[attr.name()] = attr.value();
+            // }
+
+            // WARNING: this will be changed!
+            // and now this is not module name
+            moduleParams.moduleName = attr.value();
+
+            // get child nodes
+            QDomNode dn_params = dn_nextNode.firstChild();
+
+            // распознаем дочерние узлы, пока они не закончатся
+            while (!dn_params.isNull()) {
+                ModuleParam moduleParam;
+
+                if (dn_params.nodeName() == "param") {
+                    QDomNamedNodeMap attributes = dn_params.attributes();
+                    for (uint index = 0; index < attributes.length(); index++) {
+                        QDomAttr attr = attributes.item(index).toAttr();
+                        if (attr.name() == "name")
+                            moduleParam.name = attr.value();
+                        if (attr.name() == "type")
+                            moduleParam.type = attr.value();
+                        // if (attr.name() == "value")
+                            // moduleParam.value = attr.value();
+                    }
+
+                    moduleParam.value = dn_params.toElement().text();
+                    
+                    moduleParams.params += moduleParam;
+
+                }
+
+                dn_params = dn_params.nextSibling();
+            }
+            
+            params += moduleParams; 
+        }
+
+        // переходим к следующему узлу
+        dn_nextNode = dn_nextNode.nextSibling();
+    }
+    
+#ifdef PROJECTDATA_DEBUG
+    qDebug("-- modules params --");
+    foreach (ModuleParams moduleParams, params) {
+        qDebug("module: %s", qPrintable(moduleParams.moduleName));
+        foreach (ModuleParam moduleParam, moduleParams.params) {
+            qDebug("name: %s, type: %s, value: %s", 
+                   qPrintable(moduleParam.name),
+                   qPrintable(moduleParam.type),
+                   qPrintable(moduleParam.value));
+        }
+        qDebug("----");
+    }
+#endif
+    
+    return params;
+
+}
+
+SimulatorParams ProjectData::loadSimulatorParams(QDomNode dn_node)
+{
+    SimulatorParams simulatorParams;
+
+    QDomNode dn_nextNode = dn_node.firstChild();
+    
+    // перебираем узлы, пока не закончатся
+    while (!dn_nextNode.isNull()) {
+    
+        if (dn_nextNode.nodeName() == "maxTime")
+            // FIXME: is it work with quint64?
+            simulatorParams.maxTime = dn_nextNode.toElement().text().toULong();
+
+        // WARNING: this is hack
+        if (dn_nextNode.nodeName() == "logFile")
+            simulatorParams.logFile = dn_nextNode.toElement().text();
+        
+        // переходим к следующему узлу
+        dn_nextNode = dn_nextNode.nextSibling();
+    }
+    
+#ifdef PROJECTDATA_DEBUG
+    qDebug("-- simulator params --");
+    qDebug("max time: %llu", simulatorParams.maxTime);
+    qDebug("logFile: %s", qPrintable(simulatorParams.logFile));
+#endif
+
+    return simulatorParams;
+
+}
+
 extern "C" MY_EXPORT ProjectParams load(QString& projectFileName, QString* errorMessage)
 {
     ProjectData projectData;
     return projectData.load(projectFileName, errorMessage);
     // return (a + b) / 2;
 }
+

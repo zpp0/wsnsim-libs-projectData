@@ -21,11 +21,14 @@ int main(int argc, char *argv[])
     QString projectFile;
 
     if (argc > 1)
-        projectFile = argv[2];
+        projectFile = argv[1];
     else
         projectFile = "events.xml";
 
-    ProjectParams projectParams = pd(projectFile, &errorMessage);
-    
+    // FIXME: если убрать {}, то будет сегфолт
+    {
+        ProjectParams projectParams = pd(projectFile, &errorMessage);
+    }
+
     return 0;
 }

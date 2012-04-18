@@ -14,6 +14,9 @@
     <systemEvents>
       <event ID="0" name="node on" group="PHY">
         <argument ID="0" name="nodeID" type="uint16" />
+        <argument ID="1" name="coord x" type="double" />
+        <argument ID="2" name="coord y" type="double" />
+        <argument ID="3" name="coord z" type="double" />
       </event>
       <event ID="1" name="node off" group="PHY">
         <argument ID="0" name="nodeID" type="uint16" />
@@ -48,7 +51,7 @@
       </event>
       <event ID="8" name="logtime" group="PHY">
         <argument ID="0" name="nodeID" type="uint16" />
-        <argument ID="1" name="time" type="uint64" />
+        <argument ID="1" name="localTime" type="uint64" />
       </event>
       <event ID="9" name="changelink" group="PHY">
         <argument ID="0" name="nodeID" type="uint16" />

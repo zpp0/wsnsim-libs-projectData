@@ -30,6 +30,7 @@ typedef QMap<QString, QString> AttrInfo;
 typedef AttrInfo EventInfo;
 typedef AttrInfo LogFileInfo;
 typedef AttrInfo EventArgument;
+// typedef AttrInfo ModuleParams;
 
 class ProjectInfo
 {
@@ -51,18 +52,39 @@ public:
     quint64 modified;
 };    
 
-// TODO: do this
-// class PluginParams
-// {
-//     // Q_OBJECT
-// public:
-//     // plugin info
-//     PluginInfo pluginInfo;
-//     // plugin data
-//     // TODO: check how it works
-//     QVariantMap params;
-// };
+class SimulatorParams
+{
+    // Q_OBJECT
+public:
+    // max simulation time
+    quint64 maxTime;
+    // log file
+    // WARNING: this is hack
+    QString logFile;
+};    
 
+class ModuleParam
+{
+public:
+    // param name
+    QString name;
+    // param type
+    // FIXME: how do list type?
+    QString type;
+    // param value
+    QString value;
+};
+
+// FIXME: mb move moduleName from this?
+class ModuleParams
+{
+public:
+    // WARNING: this will be changed!
+    QString moduleName;
+    // FIXME: this is unusable! O(n^2)
+    // modules params
+    QList<ModuleParam> params;
+};
 
 /**
  *
@@ -110,7 +132,8 @@ class ProjectParams
 public:
     QString version;
     ProjectInfo projectInfo;
-    // QList<PluginParams> pluginsParams;
+    SimulatorParams simulatorParams;
+    QList<ModuleParams> modulesParams;
     Events events;
     QList<LogFileInfo> logFiles;
 };

@@ -39,9 +39,10 @@ private:
     
     ProjectInfo loadProjectInfo(QDomNode dn_node);
 
-    // PluginParams loadPluginParams(QDomNode dn_node);
-    // QList<PluginParams> loadPluginsParams(QDomNode dn_node);
+    QList<ModuleParams> loadModulesParams(QDomNode dn_node);
     
+    SimulatorParams loadSimulatorParams(QDomNode dn_node);
+
     EventParams loadEventParams(QDomNode dn_node);
     Events loadEvents(QDomNode dn_node);
 
