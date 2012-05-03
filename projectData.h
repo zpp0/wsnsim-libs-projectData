@@ -36,11 +36,11 @@ public:
 private:
 
     AttrInfo loadInfo(QDomNode dn_node);
-    
+
     ProjectInfo loadProjectInfo(QDomNode dn_node);
 
     QList<ModuleParams> loadModulesParams(QDomNode dn_node);
-    
+
     SimulatorParams loadSimulatorParams(QDomNode dn_node);
 
     EventParams loadEventParams(QDomNode dn_node);

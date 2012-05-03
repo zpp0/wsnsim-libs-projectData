@@ -22,7 +22,8 @@ ProjectData::ProjectData()
     version = PROJECTDATA_VERSION;
 }
 
-ProjectParams ProjectData::load(QString& projectFileName, QString* errorMessage) {
+ProjectParams ProjectData::load(QString& projectFileName, QString* errorMessage)
+{
 
     ProjectParams projectParams;
 
@@ -39,24 +40,21 @@ ProjectParams ProjectData::load(QString& projectFileName, QString* errorMessage)
 
     if (!file.open(QFile::ReadOnly)) {
 
-#ifdef PROJECTDATA_DEBUG
         // TODO: generate more readable message
         qDebug("Error open file: %s", qPrintable(file.error()));
         *errorMessage = QString::number(file.error());
-#endif
 
-        return projectParams;        
+        return projectParams;
     }
-        
+
     QString content = file.readAll();
     file.close();
 
     // переносим текстовую информацию из файла в объекты XML
     if (!dd_doc.setContent(content, true, errorMessage, &errorLine, &errorColumn)) {
 
-#ifdef PROJECTDATA_DEBUG
-        qDebug("Error in xml structure file: %s\n line %x\n column %x ", qPrintable(*errorMessage), errorLine, errorColumn);
-#endif
+        qDebug("Error in xml structure file: %s\n line %x\n column %x ",
+               qPrintable(*errorMessage), errorLine, errorColumn);
 
         return projectParams;
     }
@@ -91,9 +89,7 @@ ProjectParams ProjectData::load(QString& projectFileName, QString* errorMessage)
         dn_node = dn_node.nextSibling();
     }
 
-#ifdef PROJECTDATA_DEBUG
     qDebug("end");
-#endif
 
     // возвращаем результат
     return projectParams;
@@ -102,7 +98,7 @@ ProjectParams ProjectData::load(QString& projectFileName, QString* errorMessage)
 ProjectInfo ProjectData::loadProjectInfo(QDomNode dn_node)
 {
     ProjectInfo projectInfo;
-    
+
     QDomNode dn_nextNode = dn_node.firstChild();
 
     // перебираем узлы, пока не закончатся
@@ -130,34 +126,18 @@ ProjectInfo ProjectData::loadProjectInfo(QDomNode dn_node)
         dn_nextNode = dn_nextNode.nextSibling();
     }
 
-#ifdef PROJECTDATA_DEBUG
     qDebug("-- projectInfo --");
-    qDebug("projectAutor is %s", qPrintable(projectInfo.projectAutor)); 
-    qDebug("projectTitle is %s", qPrintable(projectInfo.projectTitle)); 
-    qDebug("projectComment is %s", qPrintable(projectInfo.projectComment)); 
+    qDebug("projectAutor is %s", qPrintable(projectInfo.projectAutor));
+    qDebug("projectTitle is %s", qPrintable(projectInfo.projectTitle));
+    qDebug("projectComment is %s", qPrintable(projectInfo.projectComment));
     foreach(QString keyword, projectInfo.keywords)
-        qDebug("keyword is %s", qPrintable(keyword)); 
-    qDebug("revision number is %i", projectInfo.revision); 
-    qDebug("last modified at %llu", projectInfo.modified); 
-#endif
+        qDebug("keyword is %s", qPrintable(keyword));
+    qDebug("revision number is %i", projectInfo.revision);
+    qDebug("last modified at %llu", projectInfo.modified);
 
     // возвращаем результат
     return projectInfo;
 }
-
-// PluginParams ProjectData::loadPluginParams(QDomNode dn_node) {
-//     PluginParams pluginParams;
-//     pluginParams.pluginInfo = loadInfo(dn_node);
-//     // TODO: write it
-//     return pluginParams;
-// }
-
-// QList<PluginParams> ProjectData::loadPluginsParams(QDomNode dn_node) 
-// {
-//     QList<PluginParams> pluginParams;
-//     // TODO: write it
-//     return pluginParams;
-// }
 
 EventParams ProjectData::loadEventParams(QDomNode dn_node)
 {
@@ -171,7 +151,7 @@ EventParams ProjectData::loadEventParams(QDomNode dn_node)
 
         if (dn_nextNode.nodeName() == "argument")
             eventParams.arguments += loadInfo(dn_nextNode);
-        
+
         dn_nextNode = dn_nextNode.nextSibling();
     }
 
@@ -218,18 +198,19 @@ Events ProjectData::loadEvents(QDomNode dn_node)
         dn_nextNode = dn_nextNode.nextSibling();
     }
 
-#ifdef PROJECTDATA_DEBUG
     // TODO: remove this copy-paste
     qDebug("-- system Events --");
     foreach (EventParams eventParams, events.systemEvents) {
         foreach (QString key, eventParams.eventInfo.keys()) {
-            qDebug("%s is %s", qPrintable(key), qPrintable(eventParams.eventInfo[key]));
+            qDebug("%s is %s",
+                   qPrintable(key), qPrintable(eventParams.eventInfo[key]));
         }
-        
+
         foreach (EventArgument eventArgument, eventParams.arguments) {
             qDebug("-- argument");
             foreach (QString key, eventArgument.keys()) {
-                qDebug("%s is %s", qPrintable(key), qPrintable(eventArgument[key]));
+                qDebug("%s is %s",
+                       qPrintable(key), qPrintable(eventArgument[key]));
             }
         }
         qDebug("----");
@@ -237,18 +218,19 @@ Events ProjectData::loadEvents(QDomNode dn_node)
     qDebug("-- user Events --");
     foreach (EventParams eventParams, events.userEvents) {
         foreach (QString key, eventParams.eventInfo.keys()) {
-            qDebug("%s is %s", qPrintable(key), qPrintable(eventParams.eventInfo[key]));
+            qDebug("%s is %s",
+                   qPrintable(key), qPrintable(eventParams.eventInfo[key]));
         }
-        
+
         foreach (EventArgument eventArgument, eventParams.arguments) {
             qDebug("-- argument");
             foreach (QString key, eventArgument.keys()) {
-                qDebug("%s is %s", qPrintable(key), qPrintable(eventArgument[key]));
+                qDebug("%s is %s",
+                       qPrintable(key), qPrintable(eventArgument[key]));
             }
         }
         qDebug("----");
     }
-#endif
 
     return events;
 }
@@ -265,12 +247,11 @@ QList<LogFileInfo> ProjectData::loadLogFiles(QDomNode dn_node)
         // узел - version
         if (dn_nextNode.nodeName() == "logFile")
             logFiles += loadInfo(dn_nextNode);
-        
+
         // переходим к следующему узлу
         dn_nextNode = dn_nextNode.nextSibling();
     }
 
-#ifdef PROJECTDATA_DEBUG
     qDebug("-- log Files --");
     foreach (LogFileInfo logFileInfo, logFiles) {
         foreach (QString key, logFileInfo.keys()) {
@@ -278,7 +259,6 @@ QList<LogFileInfo> ProjectData::loadLogFiles(QDomNode dn_node)
         }
         qDebug("----");
     }
-#endif
 
     // возвращаем результат
     return logFiles;
@@ -289,7 +269,7 @@ AttrInfo ProjectData::loadInfo(QDomNode dn_node)
     AttrInfo info;
 
     if (dn_node.hasAttributes()) {
-        
+
         QDomNamedNodeMap attributes = dn_node.attributes();
 
         for (uint index = 0; index < attributes.length(); index++) {
@@ -346,37 +326,34 @@ QList<ModuleParams> ProjectData::loadModulesParams(QDomNode dn_node)
                     }
 
                     moduleParam.value = dn_params.toElement().text();
-                    
+
                     moduleParams.params += moduleParam;
 
                 }
 
                 dn_params = dn_params.nextSibling();
             }
-            
-            params += moduleParams; 
+
+            params += moduleParams;
         }
 
         // переходим к следующему узлу
         dn_nextNode = dn_nextNode.nextSibling();
     }
-    
-#ifdef PROJECTDATA_DEBUG
+
     qDebug("-- modules params --");
     foreach (ModuleParams moduleParams, params) {
         qDebug("module: %s", qPrintable(moduleParams.moduleName));
         foreach (ModuleParam moduleParam, moduleParams.params) {
-            qDebug("name: %s, type: %s, value: %s", 
+            qDebug("name: %s, type: %s, value: %s",
                    qPrintable(moduleParam.name),
                    qPrintable(moduleParam.type),
                    qPrintable(moduleParam.value));
         }
         qDebug("----");
     }
-#endif
-    
-    return params;
 
+    return params;
 }
 
 SimulatorParams ProjectData::loadSimulatorParams(QDomNode dn_node)
@@ -384,10 +361,10 @@ SimulatorParams ProjectData::loadSimulatorParams(QDomNode dn_node)
     SimulatorParams simulatorParams;
 
     QDomNode dn_nextNode = dn_node.firstChild();
-    
+
     // перебираем узлы, пока не закончатся
     while (!dn_nextNode.isNull()) {
-    
+
         if (dn_nextNode.nodeName() == "maxTime")
             // FIXME: is it work with quint64?
             simulatorParams.maxTime = dn_nextNode.toElement().text().toULong();
@@ -395,25 +372,20 @@ SimulatorParams ProjectData::loadSimulatorParams(QDomNode dn_node)
         // WARNING: this is hack
         if (dn_nextNode.nodeName() == "logFile")
             simulatorParams.logFile = dn_nextNode.toElement().text();
-        
+
         // переходим к следующему узлу
         dn_nextNode = dn_nextNode.nextSibling();
     }
-    
-#ifdef PROJECTDATA_DEBUG
+
     qDebug("-- simulator params --");
     qDebug("max time: %llu", simulatorParams.maxTime);
     qDebug("logFile: %s", qPrintable(simulatorParams.logFile));
-#endif
 
     return simulatorParams;
-
 }
 
 extern "C" MY_EXPORT ProjectParams load(QString& projectFileName, QString* errorMessage)
 {
     ProjectData projectData;
     return projectData.load(projectFileName, errorMessage);
-    // return (a + b) / 2;
 }
-

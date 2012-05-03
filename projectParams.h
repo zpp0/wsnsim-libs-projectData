@@ -50,7 +50,7 @@ public:
 
     // last modified in unix-time
     quint64 modified;
-};    
+};
 
 class SimulatorParams
 {
@@ -61,7 +61,7 @@ public:
     // log file
     // WARNING: this is hack
     QString logFile;
-};    
+};
 
 class ModuleParam
 {
@@ -127,7 +127,7 @@ public:
  * Contains project information, events and log files
  *
  **/
-class ProjectParams 
+class ProjectParams
 {
 public:
     QString version;
