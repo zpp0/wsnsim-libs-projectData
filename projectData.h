@@ -19,7 +19,8 @@
  *
  **/
 
-class ProjectData : public QObject {
+class ProjectData : public QObject
+{
     Q_OBJECT
 public:
 
@@ -27,27 +28,31 @@ public:
     ProjectData();
 
     ProjectParams load(QString& projectFileName, QString* errorMessage);
+    void save(QString& projectFileName, QString* errorMessage, ProjectParams params);
 
     QString version;
-
-    // TODO: do it
-    // QFile::FileError create(QString& projectFileName, ProjectParams params);
 
 private:
 
     AttrInfo loadInfo(QDomNode dn_node);
-
     ProjectInfo loadProjectInfo(QDomNode dn_node);
-
     QList<ModuleParams> loadModulesParams(QDomNode dn_node);
-
     SimulatorParams loadSimulatorParams(QDomNode dn_node);
-
     EventParams loadEventParams(QDomNode dn_node);
     Events loadEvents(QDomNode dn_node);
-
     QList<LogFileInfo> loadLogFiles(QDomNode dn_node);
 
+    // void saveInfo(QDomElement* parent, AttrInfo info);
+    void saveProjectInfo(QDomDocument* result, QDomElement* parent, ProjectInfo info);
+    void saveModulesParam(QDomDocument* result, QDomElement* parent, ModuleParams moduleParams);
+    void saveModulesParams(QDomDocument* result, QDomElement* parent, QList<ModuleParams> modulesParams);
+    void saveSimulatorParams(QDomDocument* result, QDomElement* parent, SimulatorParams simParams);
+    void saveEventParams(QDomDocument* result, QDomElement* parent, EventParams eventParams);
+    void saveEvents(QDomDocument* result, QDomElement* parent, Events events);
+    void saveLogFiles(QDomDocument* result, QDomElement* parent, QList<LogFileInfo> logFilesInfo);
+
+    void createXml(QDomDocument* result, QDomElement* parent, QString XNodeName, QString XNodeValue);
+    void createXml(QDomDocument* result, QDomElement* parent, QString XNodeName, QString XNodeValue, QMap<QString, QString> attrs);
 };
 
 #ifdef Q_WS_WIN
@@ -57,5 +62,6 @@ private:
 #endif
 
 extern "C" MY_EXPORT ProjectParams load(QString& projectFileName, QString* errorMessage);
+extern "C" MY_EXPORT void save(QString& projectFileName, QString* errorMessage, ProjectParams params);
 
 #endif // PROJECTDATA_H

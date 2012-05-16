@@ -389,3 +389,160 @@ extern "C" MY_EXPORT ProjectParams load(QString& projectFileName, QString* error
     ProjectData projectData;
     return projectData.load(projectFileName, errorMessage);
 }
+
+void ProjectData::createXml(QDomDocument* result, QDomElement* parent, QString XNodeName, QString XNodeValue, QMap<QString, QString> attrs)
+{
+    QDomElement de_new = result->createElement(XNodeName);
+    foreach (QString attrName, attrs.keys())
+        de_new.setAttribute(attrName, attrs[attrName]);
+
+    QDomText dt_new = result->createTextNode(XNodeValue);
+    de_new.appendChild(dt_new);
+    parent->appendChild(de_new);
+}
+
+void ProjectData::createXml(QDomDocument* result, QDomElement* parent, QString XNodeName, QString XNodeValue)
+{
+    QDomElement de_new = result->createElement(XNodeName);
+
+    QDomText dt_new = result->createTextNode(XNodeValue);
+    de_new.appendChild(dt_new);
+    parent->appendChild(de_new);
+}
+
+void ProjectData::saveProjectInfo(QDomDocument* result, QDomElement* parent, ProjectInfo info)
+{
+    QDomElement de_projectInfo = result->createElement("projectInfo");
+
+    createXml(result, &de_projectInfo, "author", info.projectAutor);
+    createXml(result, &de_projectInfo, "title", info.projectTitle);
+    createXml(result, &de_projectInfo, "comment", info.projectComment);
+
+    createXml(result, &de_projectInfo, "keywords", info.keywords.join(" "));
+    createXml(result, &de_projectInfo, "revision", QString::number(info.revision));
+    createXml(result, &de_projectInfo, "modified", QString::number(info.modified));
+
+    parent->appendChild(de_projectInfo);
+}
+
+void ProjectData::saveSimulatorParams(QDomDocument* result, QDomElement* parent, SimulatorParams simParams)
+{
+    QDomElement de_tree = result->createElement("simulatorParams");
+
+    createXml(result, &de_tree, "maxTime", QString::number(simParams.maxTime));
+    createXml(result, &de_tree, "logFile", simParams.logFile);
+
+    parent->appendChild(de_tree);
+}
+
+void ProjectData::saveEventParams(QDomDocument* result, QDomElement* parent, EventParams eventParams)
+{
+    QDomElement de_tree = result->createElement("event");
+    foreach (QString param, eventParams.eventInfo.keys())
+        de_tree.setAttribute(param, eventParams.eventInfo[param]);
+
+    foreach (EventArgument argument, eventParams.arguments)
+        createXml(result, &de_tree, "argument", "", argument);
+
+    parent->appendChild(de_tree);
+}
+
+void ProjectData::saveEvents(QDomDocument* result, QDomElement* parent, Events events)
+{
+    QDomElement de_tree_ = result->createElement("events");
+    QDomElement de_tree = result->createElement("systemEvents");
+
+    foreach (EventParams eventParams, events.systemEvents)
+        saveEventParams(result, &de_tree, eventParams);
+
+    de_tree_.appendChild(de_tree);
+    parent->appendChild(de_tree_);
+}
+
+void ProjectData::saveModulesParam(QDomDocument* result, QDomElement* parent, ModuleParams moduleParams)
+{
+    QDomElement de_tree = result->createElement("module");
+    de_tree.setAttribute("name", moduleParams.moduleName);
+
+    foreach (ModuleParam param, moduleParams.params) {
+        QMap<QString, QString> paramsAttrs;
+        paramsAttrs["name"] = param.name;
+        paramsAttrs["type"] = param.type;
+        createXml(result, &de_tree, "param", param.value, paramsAttrs);
+    }
+
+    parent->appendChild(de_tree);
+}
+
+void ProjectData::saveModulesParams(QDomDocument* result, QDomElement* parent, QList<ModuleParams> modulesParams)
+{
+    QDomElement de_tree = result->createElement("modulesParams");
+
+    foreach (ModuleParams moduleParams, modulesParams)
+        saveModulesParam(result, &de_tree, moduleParams);
+
+    parent->appendChild(de_tree);
+}
+
+void ProjectData::saveLogFiles(QDomDocument* result, QDomElement* parent, QList<LogFileInfo> logFilesInfo)
+{
+    QDomElement de_tree = result->createElement("logFiles");
+
+    foreach (LogFileInfo logFileInfo, logFilesInfo)
+        createXml(result, &de_tree, "logFile", "", logFileInfo);
+
+    parent->appendChild(de_tree);
+}
+
+void ProjectData::save(QString& projectFileName, QString* errorMessage, ProjectParams params)
+{
+    QFile file(projectFileName);
+
+    // создаем объект с данными XML
+    // в него сначала будут записаны все данные, потом он записывается в файл
+    QDomDocument result;
+    // создаем узел main, дочерними которого будут все остальные узлы
+    QDomElement de_resultElement = result.createElement("project");
+    de_resultElement.setAttribute("version", params.version);
+
+    // сохраняем параметры проекта
+    saveProjectInfo(&result, &de_resultElement, params.projectInfo);
+    // сохраняем параметры симулятора
+    saveSimulatorParams(&result, &de_resultElement, params.simulatorParams);
+
+    saveModulesParams(&result, &de_resultElement, params.modulesParams);
+
+    saveEvents(&result, &de_resultElement, params.events);
+
+    saveLogFiles(&result, &de_resultElement, params.logFiles);
+
+    // // сохраняем параметры среды
+    // saveEnvParams(&result, &de_resultElement, params->env);
+    // // сохраняем параметры типов узлов
+    // saveNodeTypesParams(&result, &de_resultElement, params->nodeTypes);
+    // // сохраняем параметры процессов
+    // saveProcessesParams(&result, &de_resultElement, params->processes);
+    // // сохраняем параметры узлов
+    // saveNodesParams(&result, &de_resultElement, params->nodes);
+
+    // открываем файл на запись
+    if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        // пишем данные из объекта xml в файл
+
+        QTextStream out(&file);
+
+        QDomNode xmlNode = result.createProcessingInstruction("xml",
+                                                              "version=\"1.0\" encoding=\"UTF-8\"");
+        result.appendChild(xmlNode);
+        result.appendChild(de_resultElement);
+        out << result.toString(4);
+    }
+
+    file.close();
+}
+
+extern "C" MY_EXPORT void save(QString& projectFileName, QString* errorMessage, ProjectParams params)
+{
+    ProjectData projectData;
+    projectData.save(projectFileName, errorMessage, params);
+}
