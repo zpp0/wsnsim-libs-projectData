@@ -52,12 +52,19 @@ public:
     quint64 modified;
 };
 
+// Единицы измерений времени работы симулятора
+typedef enum timeUnits {
+    us, ms, s, m, h, d, w, months, years
+} TimeUnits;
+
 class SimulatorParams
 {
     // Q_OBJECT
 public:
     // max simulation time
     quint64 maxTime;
+    // max simulation time units
+    TimeUnits timeUnits;
     // log file
     // WARNING: this is hack
     QString logFile;

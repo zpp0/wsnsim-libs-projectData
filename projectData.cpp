@@ -369,6 +369,10 @@ SimulatorParams ProjectData::loadSimulatorParams(QDomNode dn_node)
             // FIXME: is it work with quint64?
             simulatorParams.maxTime = dn_nextNode.toElement().text().toULong();
 
+        if (dn_nextNode.nodeName() == "timeUnits")
+            // FIXME: is it work with quint64?
+            simulatorParams.timeUnits = TimeUnits(dn_nextNode.toElement().text().toInt());
+
         // WARNING: this is hack
         if (dn_nextNode.nodeName() == "logFile")
             simulatorParams.logFile = dn_nextNode.toElement().text();
@@ -430,6 +434,7 @@ void ProjectData::saveSimulatorParams(QDomDocument* result, QDomElement* parent,
     QDomElement de_tree = result->createElement("simulatorParams");
 
     createXml(result, &de_tree, "maxTime", QString::number(simParams.maxTime));
+    createXml(result, &de_tree, "timeUnits", QString::number(simParams.timeUnits));
     createXml(result, &de_tree, "logFile", simParams.logFile);
 
     parent->appendChild(de_tree);
