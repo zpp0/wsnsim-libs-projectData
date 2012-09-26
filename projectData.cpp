@@ -5,6 +5,7 @@
  *
  **/
 
+#include <QTextCodec>
 #include <QtXml>
 #include <QDomElement>
 #include <QDomDocument>
@@ -20,6 +21,9 @@
 ProjectData::ProjectData()
 {
     version = PROJECTDATA_VERSION;
+    // устанавливаем кодировки для строк
+    QTextCodec::setCodecForTr(QTextCodec::codecForName("utf-8"));
+    QTextCodec::setCodecForCStrings(QTextCodec::codecForName("utf-8"));
 }
 
 ProjectParams ProjectData::load(QString& projectFileName, QString* errorMessage)
