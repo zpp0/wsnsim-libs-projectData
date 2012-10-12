@@ -51,7 +51,10 @@ ProjectParams ProjectData::load(QString& projectFileName, QString* errorMessage)
         return projectParams;
     }
 
-    QString content = file.readAll();
+    QTextStream out(&file);
+    out.setCodec(QTextCodec::codecForName("utf-8"));
+
+    QString content = out.readAll();
     file.close();
 
     // переносим текстовую информацию из файла в объекты XML
@@ -539,6 +542,7 @@ void ProjectData::save(QString& projectFileName, QString* errorMessage, ProjectP
         // пишем данные из объекта xml в файл
 
         QTextStream out(&file);
+        out.setCodec(QTextCodec::codecForName("UTF-8"));
 
         QDomNode xmlNode = result.createProcessingInstruction("xml",
                                                               "version=\"1.0\" encoding=\"UTF-8\"");
