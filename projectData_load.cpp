@@ -235,9 +235,9 @@ QList<ModuleParam> ProjectData::loadModuleParams(QDomNode dn_node)
     return moduleParams;
 }
 
-Module ProjectData::loadModule(QDomNode dn_node)
+ModuleData ProjectData::loadModule(QDomNode dn_node)
 {
-    Module module;
+    ModuleData module;
 
     // getting moduleInfo from current XML node
     module.moduleInfo = loadInfo(dn_node);
@@ -281,9 +281,9 @@ Module ProjectData::loadModule(QDomNode dn_node)
     return module;
 }
 
-QList<Module> ProjectData::loadModules(QDomNode dn_node)
+QList<ModuleData> ProjectData::loadModules(QDomNode dn_node)
 {
-    QList<Module> modules;
+    QList<ModuleData> modules;
 
     QDomNode dn_nextNode = dn_node.firstChild();
 
@@ -299,7 +299,7 @@ QList<Module> ProjectData::loadModules(QDomNode dn_node)
     }
 
     qDebug("-- modules --");
-    foreach(Module module, modules) {
+    foreach(ModuleData module, modules) {
         qDebug("-- module --");
         foreach(QString param, module.moduleInfo.keys())
             qDebug("param %s is %s", qPrintable(param), qPrintable(module.moduleInfo[param]));

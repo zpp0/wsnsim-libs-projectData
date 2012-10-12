@@ -73,7 +73,7 @@ struct ModuleParam
     QVariant value;
 };
 
-struct Module
+struct ModuleData
 {
     // moduleInfo contains name, implementation's lang
     ModuleInfo moduleInfo;
@@ -127,7 +127,7 @@ struct ProjectParams
     QString version;
     ProjectInfo projectInfo;
     SimulatorParams simulatorParams;
-    QList<Module> modules;
+    QList<ModuleData> modules;
     Events events;
     QList<LogFileInfo> logFiles;
 };

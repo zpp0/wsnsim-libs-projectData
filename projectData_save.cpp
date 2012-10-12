@@ -78,12 +78,12 @@ void ProjectData::saveEvents(QDomDocument* result, QDomElement* parent, Events e
     parent->appendChild(de_tree_);
 }
 
-void ProjectData::saveModules(QDomDocument* result, QDomElement* parent, QList<Module> modules)
+void ProjectData::saveModules(QDomDocument* result, QDomElement* parent, QList<ModuleData> modules)
 {
     QDomElement de_tree = result->createElement("modules");
 
     for (int moduleID = 0; moduleID < modules.size(); moduleID++) {
-        Module module = modules[moduleID];
+        ModuleData module = modules[moduleID];
 
         // creating module subtree
         QDomElement de_module = result->createElement("module");
