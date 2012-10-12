@@ -80,8 +80,8 @@ ProjectParams ProjectData::load(QString& projectFileName, QString* errorMessage)
         if (dn_node.nodeName() == "events")
             projectParams.events = loadEvents(dn_node);
 
-        if (dn_node.nodeName() == "modulesParams")
-            projectParams.modulesParams = loadModulesParams(dn_node);
+        if (dn_node.nodeName() == "modules")
+            projectParams.modules = loadModules(dn_node);
 
         if (dn_node.nodeName() == "simulatorParams")
             projectParams.simulatorParams = loadSimulatorParams(dn_node);
@@ -285,79 +285,89 @@ AttrInfo ProjectData::loadInfo(QDomNode dn_node)
     return info;
 }
 
-QList<ModuleParams> ProjectData::loadModulesParams(QDomNode dn_node)
+QList<ModuleParam> ProjectData::loadModuleParams(QDomNode dn_node)
 {
-    QList<ModuleParams> params;
+}
 
-    QDomNode dn_nextNode = dn_node.firstChild();
+Module ProjectData::loadModule(QDomNode dn_node)
+{
+    // return module;
+}
 
-    // перебираем узлы, пока не закончатся
-    while (!dn_nextNode.isNull()) {
+QList<Module> ProjectData::loadModules(QDomNode dn_node)
+// TODO: do
+{
+    // QList<ModuleParams> params;
 
-        // узел - version
-        if (dn_nextNode.nodeName() == "module") {
-            ModuleParams moduleParams;
+    // QDomNode dn_nextNode = dn_node.firstChild();
 
-            QDomNamedNodeMap attributes = dn_nextNode.attributes();
+    // // перебираем узлы, пока не закончатся
+    // while (!dn_nextNode.isNull()) {
 
-            // FIXME: do smt with it
-            // for (uint index = 0; index < attributes.length(); index++) {
-            QDomAttr attr = attributes.item(0).toAttr();
-            // info[attr.name()] = attr.value();
-            // }
+    //     // узел - version
+    //     if (dn_nextNode.nodeName() == "module") {
+    //         ModuleParams moduleParams;
 
-            // WARNING: this will be changed!
-            // and now this is not module name
-            moduleParams.moduleName = attr.value();
+    //         QDomNamedNodeMap attributes = dn_nextNode.attributes();
 
-            // get child nodes
-            QDomNode dn_params = dn_nextNode.firstChild();
+    //         // FIXME: do smt with it
+    //         // for (uint index = 0; index < attributes.length(); index++) {
+    //         QDomAttr attr = attributes.item(0).toAttr();
+    //         // info[attr.name()] = attr.value();
+    //         // }
 
-            // распознаем дочерние узлы, пока они не закончатся
-            while (!dn_params.isNull()) {
-                ModuleParam moduleParam;
+    //         // WARNING: this will be changed!
+    //         // and now this is not module name
+    //         moduleParams.moduleName = attr.value();
 
-                if (dn_params.nodeName() == "param") {
-                    QDomNamedNodeMap attributes = dn_params.attributes();
-                    for (uint index = 0; index < attributes.length(); index++) {
-                        QDomAttr attr = attributes.item(index).toAttr();
-                        if (attr.name() == "name")
-                            moduleParam.name = attr.value();
-                        if (attr.name() == "type")
-                            moduleParam.type = attr.value();
-                        // if (attr.name() == "value")
-                            // moduleParam.value = attr.value();
-                    }
+    //         // get child nodes
+    //         QDomNode dn_params = dn_nextNode.firstChild();
 
-                    moduleParam.value = dn_params.toElement().text();
+    //         // распознаем дочерние узлы, пока они не закончатся
+    //         while (!dn_params.isNull()) {
+    //             ModuleParam moduleParam;
 
-                    moduleParams.params += moduleParam;
+    //             if (dn_params.nodeName() == "param") {
+    //                 QDomNamedNodeMap attributes = dn_params.attributes();
+    //                 for (uint index = 0; index < attributes.length(); index++) {
+    //                     QDomAttr attr = attributes.item(index).toAttr();
+    //                     if (attr.name() == "name")
+    //                         moduleParam.name = attr.value();
+    //                     if (attr.name() == "type")
+    //                         moduleParam.type = attr.value();
+    //                     // if (attr.name() == "value")
+    //                         // moduleParam.value = attr.value();
+    //                 }
 
-                }
+    //                 moduleParam.value = dn_params.toElement().text();
 
-                dn_params = dn_params.nextSibling();
-            }
+    //                 moduleParams.params += moduleParam;
 
-            params += moduleParams;
-        }
+    //             }
 
-        // переходим к следующему узлу
-        dn_nextNode = dn_nextNode.nextSibling();
-    }
+    //             dn_params = dn_params.nextSibling();
+    //         }
 
-    qDebug("-- modules params --");
-    foreach (ModuleParams moduleParams, params) {
-        qDebug("module: %s", qPrintable(moduleParams.moduleName));
-        foreach (ModuleParam moduleParam, moduleParams.params) {
-            qDebug("name: %s, type: %s, value: %s",
-                   qPrintable(moduleParam.name),
-                   qPrintable(moduleParam.type),
-                   qPrintable(moduleParam.value));
-        }
-        qDebug("----");
-    }
+    //         params += moduleParams;
+    //     }
 
-    return params;
+    //     // переходим к следующему узлу
+    //     dn_nextNode = dn_nextNode.nextSibling();
+    // }
+
+    // qDebug("-- modules params --");
+    // foreach (ModuleParams moduleParams, params) {
+    //     qDebug("module: %s", qPrintable(moduleParams.moduleName));
+    //     foreach (ModuleParam moduleParam, moduleParams.params) {
+    //         qDebug("name: %s, type: %s, value: %s",
+    //                qPrintable(moduleParam.name),
+    //                qPrintable(moduleParam.type),
+    //                qPrintable(moduleParam.value));
+    //     }
+    //     qDebug("----");
+    // }
+
+    // return params;
 }
 
 SimulatorParams ProjectData::loadSimulatorParams(QDomNode dn_node)
@@ -468,29 +478,31 @@ void ProjectData::saveEvents(QDomDocument* result, QDomElement* parent, Events e
     parent->appendChild(de_tree_);
 }
 
-void ProjectData::saveModulesParam(QDomDocument* result, QDomElement* parent, ModuleParams moduleParams)
+void ProjectData::saveModules(QDomDocument* result, QDomElement* parent, QList<Module> modules)
 {
-    QDomElement de_tree = result->createElement("module");
-    de_tree.setAttribute("name", moduleParams.moduleName);
+    // TODO: do this
+    // QDomElement de_tree = result->createElement("module");
+    // de_tree.setAttribute("name", moduleParams.moduleName);
 
-    foreach (ModuleParam param, moduleParams.params) {
-        QMap<QString, QString> paramsAttrs;
-        paramsAttrs["name"] = param.name;
-        paramsAttrs["type"] = param.type;
-        createXml(result, &de_tree, "param", param.value, paramsAttrs);
-    }
+    // foreach (ModuleParam param, moduleParams.params) {
+    //     QMap<QString, QString> paramsAttrs;
+    //     paramsAttrs["name"] = param.name;
+    //     paramsAttrs["type"] = param.type;
+    //     createXml(result, &de_tree, "param", param.value, paramsAttrs);
+    // }
 
-    parent->appendChild(de_tree);
+    // parent->appendChild(de_tree);
 }
 
-void ProjectData::saveModulesParams(QDomDocument* result, QDomElement* parent, QList<ModuleParams> modulesParams)
+void ProjectData::saveModulesParams(QDomDocument* result, QDomElement* parent, QList<ModuleParam> modulesParams)
 {
-    QDomElement de_tree = result->createElement("modulesParams");
+    // TODO: do this
+    // QDomElement de_tree = result->createElement("modulesParams");
 
-    foreach (ModuleParams moduleParams, modulesParams)
-        saveModulesParam(result, &de_tree, moduleParams);
+    // foreach (ModuleParams moduleParams, modulesParams)
+    //     saveModulesParam(result, &de_tree, moduleParams);
 
-    parent->appendChild(de_tree);
+    // parent->appendChild(de_tree);
 }
 
 void ProjectData::saveLogFiles(QDomDocument* result, QDomElement* parent, QList<LogFileInfo> logFilesInfo)
@@ -519,20 +531,11 @@ void ProjectData::save(QString& projectFileName, QString* errorMessage, ProjectP
     // сохраняем параметры симулятора
     saveSimulatorParams(&result, &de_resultElement, params.simulatorParams);
 
-    saveModulesParams(&result, &de_resultElement, params.modulesParams);
+    saveModules(&result, &de_resultElement, params.modules);
 
     saveEvents(&result, &de_resultElement, params.events);
 
     saveLogFiles(&result, &de_resultElement, params.logFiles);
-
-    // // сохраняем параметры среды
-    // saveEnvParams(&result, &de_resultElement, params->env);
-    // // сохраняем параметры типов узлов
-    // saveNodeTypesParams(&result, &de_resultElement, params->nodeTypes);
-    // // сохраняем параметры процессов
-    // saveProcessesParams(&result, &de_resultElement, params->processes);
-    // // сохраняем параметры узлов
-    // saveNodesParams(&result, &de_resultElement, params->nodes);
 
     // открываем файл на запись
     if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
