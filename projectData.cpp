@@ -373,79 +373,23 @@ Module ProjectData::loadModule(QDomNode dn_node)
 }
 
 QList<Module> ProjectData::loadModules(QDomNode dn_node)
-// TODO: do
 {
-    // QList<ModuleParams> params;
+    QList<Module> modules;
 
-    // QDomNode dn_nextNode = dn_node.firstChild();
+    QDomNode dn_nextNode = dn_node.firstChild();
 
-    // // перебираем узлы, пока не закончатся
-    // while (!dn_nextNode.isNull()) {
+    // перебираем узлы, пока не закончатся
+    while (!dn_nextNode.isNull()) {
 
-    //     // узел - version
-    //     if (dn_nextNode.nodeName() == "module") {
-    //         ModuleParams moduleParams;
+        // getting module
+        if (dn_nextNode.nodeName() == "module")
+            modules += loadModule(dn_nextNode);
 
-    //         QDomNamedNodeMap attributes = dn_nextNode.attributes();
+        // переходим к следующему узлу
+        dn_nextNode = dn_nextNode.nextSibling();
+    }
 
-    //         // FIXME: do smt with it
-    //         // for (uint index = 0; index < attributes.length(); index++) {
-    //         QDomAttr attr = attributes.item(0).toAttr();
-    //         // info[attr.name()] = attr.value();
-    //         // }
-
-    //         // WARNING: this will be changed!
-    //         // and now this is not module name
-    //         moduleParams.moduleName = attr.value();
-
-    //         // get child nodes
-    //         QDomNode dn_params = dn_nextNode.firstChild();
-
-    //         // распознаем дочерние узлы, пока они не закончатся
-    //         while (!dn_params.isNull()) {
-    //             ModuleParam moduleParam;
-
-    //             if (dn_params.nodeName() == "param") {
-    //                 QDomNamedNodeMap attributes = dn_params.attributes();
-    //                 for (uint index = 0; index < attributes.length(); index++) {
-    //                     QDomAttr attr = attributes.item(index).toAttr();
-    //                     if (attr.name() == "name")
-    //                         moduleParam.name = attr.value();
-    //                     if (attr.name() == "type")
-    //                         moduleParam.type = attr.value();
-    //                     // if (attr.name() == "value")
-    //                         // moduleParam.value = attr.value();
-    //                 }
-
-    //                 moduleParam.value = dn_params.toElement().text();
-
-    //                 moduleParams.params += moduleParam;
-
-    //             }
-
-    //             dn_params = dn_params.nextSibling();
-    //         }
-
-    //         params += moduleParams;
-    //     }
-
-    //     // переходим к следующему узлу
-    //     dn_nextNode = dn_nextNode.nextSibling();
-    // }
-
-    // qDebug("-- modules params --");
-    // foreach (ModuleParams moduleParams, params) {
-    //     qDebug("module: %s", qPrintable(moduleParams.moduleName));
-    //     foreach (ModuleParam moduleParam, moduleParams.params) {
-    //         qDebug("name: %s, type: %s, value: %s",
-    //                qPrintable(moduleParam.name),
-    //                qPrintable(moduleParam.type),
-    //                qPrintable(moduleParam.value));
-    //     }
-    //     qDebug("----");
-    // }
-
-    // return params;
+    return modules;
 }
 
 SimulatorParams ProjectData::loadSimulatorParams(QDomNode dn_node)
