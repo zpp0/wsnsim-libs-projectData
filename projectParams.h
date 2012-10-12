@@ -75,9 +75,12 @@ struct ModuleParam
 
 struct Module
 {
+    // moduleInfo contains name, implementation's lang
     ModuleInfo moduleInfo;
     QString fileName;
     QList<ModuleParam> params;
+    // list of ID's of dependent modules
+    QList<quint16> dependences;
 };
 
 /**
