@@ -76,8 +76,9 @@ struct ModuleParam
 struct Module
 {
     ModuleInfo moduleInfo;
+    QString fileName;
     QList<ModuleParam> params;
-}
+};
 
 /**
  *
