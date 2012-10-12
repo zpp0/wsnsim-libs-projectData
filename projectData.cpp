@@ -494,15 +494,29 @@ void ProjectData::saveModules(QDomDocument* result, QDomElement* parent, QList<M
     // parent->appendChild(de_tree);
 }
 
-void ProjectData::saveModulesParams(QDomDocument* result, QDomElement* parent, QList<ModuleParam> modulesParams)
+void ProjectData::saveModulesParams(QDomDocument* result, QDomElement* parent, QList<ModuleParam> moduleParams)
 {
-    // TODO: do this
-    // QDomElement de_tree = result->createElement("modulesParams");
+    QDomElement de_tree = result->createElement("params");
 
-    // foreach (ModuleParams moduleParams, modulesParams)
-    //     saveModulesParam(result, &de_tree, moduleParams);
+    foreach (ModuleParam param, moduleParams) {
 
-    // parent->appendChild(de_tree);
+        QMap<QString, QString> paramsAttrs;
+        paramsAttrs["name"] = param.name;
+        paramsAttrs["type"] = param.type;
+
+        if (param.type == "table") {
+
+            // TODO: implement this
+        }
+        if (param.type == "Probability distribution") {
+            // TODO: implement this
+        }
+        else
+            createXml(result, &de_tree, "param", param.value.toString(), paramsAttrs);
+
+    }
+
+    parent->appendChild(de_tree);
 }
 
 void ProjectData::saveLogFiles(QDomDocument* result, QDomElement* parent, QList<LogFileInfo> logFilesInfo)
