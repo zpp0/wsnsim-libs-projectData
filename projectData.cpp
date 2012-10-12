@@ -350,7 +350,7 @@ Module ProjectData::loadModule(QDomNode dn_node)
         // getting dependences
         if (dn_nextNode.nodeName() == "dependences") {
             QList<quint16> dependences;
-            QDomNode dn_dependNode = dn_node.firstChild();
+            QDomNode dn_dependNode = dn_nextNode.firstChild();
 
             // перебираем узлы, пока не закончатся
             while (!dn_dependNode.isNull()) {
@@ -399,7 +399,7 @@ QList<Module> ProjectData::loadModules(QDomNode dn_node)
             qDebug("param %s of type %s with value %s",
                    qPrintable(param.name), qPrintable(param.type), qPrintable(param.value.toString()));
         foreach(quint16 moduleID, module.dependences)
-            qDebug("module depend on %i", qPrintable(moduleID));
+            qDebug("module depends on %u", moduleID);
     }
 
     return modules;
