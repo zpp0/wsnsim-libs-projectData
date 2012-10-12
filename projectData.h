@@ -35,17 +35,21 @@ public:
 private:
 
     AttrInfo loadInfo(QDomNode dn_node);
+
     ProjectInfo loadProjectInfo(QDomNode dn_node);
-    QList<ModuleParams> loadModulesParams(QDomNode dn_node);
     SimulatorParams loadSimulatorParams(QDomNode dn_node);
     EventParams loadEventParams(QDomNode dn_node);
+    QList<Module> loadModules(QDomNode dn_node);
     Events loadEvents(QDomNode dn_node);
     QList<LogFileInfo> loadLogFiles(QDomNode dn_node);
 
+    Module loadModule(QDomNode dn_node);
+    QList<ModuleParam> loadModuleParams(QDomNode dn_node);
+
     // void saveInfo(QDomElement* parent, AttrInfo info);
     void saveProjectInfo(QDomDocument* result, QDomElement* parent, ProjectInfo info);
-    void saveModulesParam(QDomDocument* result, QDomElement* parent, ModuleParams moduleParams);
-    void saveModulesParams(QDomDocument* result, QDomElement* parent, QList<ModuleParams> modulesParams);
+    void saveModules(QDomDocument* result, QDomElement* parent, QList<Module> modules);
+    void saveModulesParams(QDomDocument* result, QDomElement* parent, QList<ModuleParam> modulesParams);
     void saveSimulatorParams(QDomDocument* result, QDomElement* parent, SimulatorParams simParams);
     void saveEventParams(QDomDocument* result, QDomElement* parent, EventParams eventParams);
     void saveEvents(QDomDocument* result, QDomElement* parent, Events events);

@@ -24,18 +24,14 @@
  *    attributeName="type" attributeValue="uint16"
  *
  **/
-// TODO: rename?
 typedef QMap<QString, QString> AttrInfo;
-// typedef AttrInfo PluginInfo;
 typedef AttrInfo EventInfo;
 typedef AttrInfo LogFileInfo;
 typedef AttrInfo EventArgument;
-// typedef AttrInfo ModuleParams;
+typedef AttrInfo ModuleInfo;
 
-class ProjectInfo
+struct ProjectInfo
 {
-    // Q_OBJECT
-public:
     // name of the author of the project
     QString projectAutor;
     // title of the project
@@ -57,40 +53,34 @@ typedef enum timeUnits {
     us, ms, s, m, h, d, w, months, years
 } TimeUnits;
 
-class SimulatorParams
+struct SimulatorParams
 {
-    // Q_OBJECT
-public:
     // max simulation time
     quint64 maxTime;
     // max simulation time units
     TimeUnits timeUnits;
     // log file
-    // WARNING: this is hack
     QString logFile;
 };
 
-class ModuleParam
+struct ModuleParam
 {
-public:
     // param name
     QString name;
     // param type
-    // FIXME: how do list type?
     QString type;
     // param value
-    QString value;
+    QVariant value;
 };
 
-// FIXME: mb move moduleName from this?
-class ModuleParams
+struct Module
 {
-public:
-    // WARNING: this will be changed!
-    QString moduleName;
-    // FIXME: this is unusable! O(n^2)
-    // modules params
+    // moduleInfo contains name, implementation's lang
+    ModuleInfo moduleInfo;
+    QString fileName;
     QList<ModuleParam> params;
+    // list of ID's of dependent modules
+    QList<quint16> dependences;
 };
 
 /**
@@ -105,9 +95,8 @@ public:
  *    TODO: write about other types, about type attr values, about numbering of events
  *
  **/
-class EventParams
+struct EventParams
 {
-public:
     // event info
     EventInfo eventInfo;
     // event arguments
@@ -120,9 +109,8 @@ public:
  * Contains lists of system and users events
  *
  **/
-class Events
+struct Events
 {
-public:
     // params
     QList<EventParams> systemEvents;
     QList<EventParams> userEvents;
@@ -134,13 +122,12 @@ public:
  * Contains project information, events and log files
  *
  **/
-class ProjectParams
+struct ProjectParams
 {
-public:
     QString version;
     ProjectInfo projectInfo;
     SimulatorParams simulatorParams;
-    QList<ModuleParams> modulesParams;
+    QList<Module> modules;
     Events events;
     QList<LogFileInfo> logFiles;
 };
