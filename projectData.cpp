@@ -287,6 +287,43 @@ AttrInfo ProjectData::loadInfo(QDomNode dn_node)
 
 QList<ModuleParam> ProjectData::loadModuleParams(QDomNode dn_node)
 {
+    QList<ModuleParam> moduleParams;
+
+    // param node
+    QDomNode dn_nextNode = dn_node.firstChild();
+
+    // перебираем узлы, пока не закончатся
+    while (!dn_nextNode.isNull()) {
+
+        // loading module param
+        if (dn_nextNode.nodeName() == "param") {
+            ModuleParam param;
+
+            // getting xml node attributes
+            QMap<QString, QString> attrs = loadInfo(dn_nextNode);
+            param.name = attrs["name"];
+            param.type = attrs["type"];
+
+            // getting value of param
+            if (param.type == "table") {
+                // TODO: implement this
+            }
+            if (param.type == "Probability distribution") {
+                // TODO: implement this
+            }
+            // other types
+            else
+                param.value = dn_nextNode.toElement().text();
+
+            // adding param to list
+            moduleParams += param;
+        }
+
+        // переходим к следующему узлу
+        dn_nextNode = dn_nextNode.nextSibling();
+    }
+
+    return moduleParams;
 }
 
 Module ProjectData::loadModule(QDomNode dn_node)
