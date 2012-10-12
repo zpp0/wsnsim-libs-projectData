@@ -499,6 +499,15 @@ void ProjectData::saveModules(QDomDocument* result, QDomElement* parent, QList<M
         // saving module params
         saveModulesParams(result, &de_module, module.params);
 
+        // creating dependences subtree
+        QDomElement de_dependences = result->createElement("dependences");
+
+        foreach (quint16 moduleID, module.dependences)
+            createXml(result, &de_dependences, "moduleID", QString::number(moduleID));
+
+        // append dependences subtree to module subtree
+        de_module.appendChild(de_dependences);
+        // append module subtree to global tree
         de_tree.appendChild(de_module);
     }
 
