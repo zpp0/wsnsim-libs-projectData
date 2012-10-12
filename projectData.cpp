@@ -328,7 +328,48 @@ QList<ModuleParam> ProjectData::loadModuleParams(QDomNode dn_node)
 
 Module ProjectData::loadModule(QDomNode dn_node)
 {
-    // return module;
+    Module module;
+
+    // getting moduleInfo from current XML node
+    module.moduleInfo = loadInfo(dn_node);
+
+    // child node
+    QDomNode dn_nextNode = dn_node.firstChild();
+
+    // перебираем узлы, пока не закончатся
+    while (!dn_nextNode.isNull()) {
+
+        // getting fileName
+        if (dn_nextNode.nodeName() == "fileName")
+            module.fileName = dn_nextNode.toElement().text();
+
+        // getting params
+        if (dn_nextNode.nodeName() == "params")
+            module.params = loadModuleParams(dn_nextNode);
+
+        // getting dependences
+        if (dn_nextNode.nodeName() == "dependences") {
+            QList<quint16> dependences;
+            QDomNode dn_dependNode = dn_node.firstChild();
+
+            // перебираем узлы, пока не закончатся
+            while (!dn_dependNode.isNull()) {
+                // moduleID
+                if (dn_dependNode.nodeName() == "moduleID")
+                    dependences += dn_dependNode.toElement().text().toInt();
+
+                // переходим к следующему узлу
+                dn_dependNode = dn_dependNode.nextSibling();
+            }
+
+            module.dependences = dependences;
+        }
+
+        // переходим к следующему узлу
+        dn_nextNode = dn_nextNode.nextSibling();
+    }
+
+    return module;
 }
 
 QList<Module> ProjectData::loadModules(QDomNode dn_node)
