@@ -480,18 +480,29 @@ void ProjectData::saveEvents(QDomDocument* result, QDomElement* parent, Events e
 
 void ProjectData::saveModules(QDomDocument* result, QDomElement* parent, QList<Module> modules)
 {
-    // TODO: do this
-    // QDomElement de_tree = result->createElement("module");
-    // de_tree.setAttribute("name", moduleParams.moduleName);
+    QDomElement de_tree = result->createElement("modules");
 
-    // foreach (ModuleParam param, moduleParams.params) {
-    //     QMap<QString, QString> paramsAttrs;
-    //     paramsAttrs["name"] = param.name;
-    //     paramsAttrs["type"] = param.type;
-    //     createXml(result, &de_tree, "param", param.value, paramsAttrs);
-    // }
+    for (int moduleID = 0; moduleID < modules.size(); moduleID++) {
+        Module module = modules[moduleID];
 
-    // parent->appendChild(de_tree);
+        // creating module subtree
+        QDomElement de_module = result->createElement("module");
+
+        // setting ID attribute
+        de_module.setAttribute("ID", moduleID);
+        // setting others attributes
+        foreach (QString attr, module.moduleInfo.keys())
+            de_module.setAttribute(attr, module.moduleInfo[attr]);
+
+        // saving fileName node
+        createXml(result, &de_module, "fileName", module.fileName);
+        // saving module params
+        saveModulesParams(result, &de_module, module.params);
+
+        de_tree.appendChild(de_module);
+    }
+
+    parent->appendChild(de_tree);
 }
 
 void ProjectData::saveModulesParams(QDomDocument* result, QDomElement* parent, QList<ModuleParam> moduleParams)
