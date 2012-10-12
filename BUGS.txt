@@ -1,1 +1,0 @@
-* segmentation fault в тестовой программе
