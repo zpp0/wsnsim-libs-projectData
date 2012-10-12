@@ -389,6 +389,19 @@ QList<Module> ProjectData::loadModules(QDomNode dn_node)
         dn_nextNode = dn_nextNode.nextSibling();
     }
 
+    qDebug("-- modules --");
+    foreach(Module module, modules) {
+        qDebug("-- module --");
+        foreach(QString param, module.moduleInfo.keys())
+            qDebug("param %s is %s", qPrintable(param), qPrintable(module.moduleInfo[param]));
+        qDebug("fileName is %s", qPrintable(module.fileName));
+        foreach(ModuleParam param, module.params)
+            qDebug("param %s of type %s with value %s",
+                   qPrintable(param.name), qPrintable(param.type), qPrintable(param.value.toString()));
+        foreach(quint16 moduleID, module.dependences)
+            qDebug("module depend on %i", qPrintable(moduleID));
+    }
+
     return modules;
 }
 
