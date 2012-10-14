@@ -79,8 +79,8 @@ struct ModuleData
     ModuleInfo moduleInfo;
     QString fileName;
     QList<ModuleParam> params;
-    // list of ID's of dependent modules
-    QMap<QString, quint16> dependencies;
+    // dependName -> <dependType, moduleID>
+    QMap<QString, QPair<QString, quint16> > dependencies;
 };
 
 /**
