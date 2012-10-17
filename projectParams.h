@@ -61,6 +61,9 @@ struct SimulatorParams
     TimeUnits timeUnits;
     // log file
     QString logFile;
+    // nodes number
+    // moduleID -> nodesNumber
+    QMap<quint16, quint16> nodes;
 };
 
 struct ModuleParam

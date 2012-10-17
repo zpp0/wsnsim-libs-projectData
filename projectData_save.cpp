@@ -51,6 +51,14 @@ void ProjectData::saveSimulatorParams(QDomDocument* result, QDomElement* parent,
     createXml(result, &de_tree, "timeUnits", QString::number(simParams.timeUnits));
     createXml(result, &de_tree, "logFile", simParams.logFile);
 
+    QDomElement de_nodes = result->createElement("nodesNumber");
+    foreach(quint16 moduleID, simParams.nodes.keys()) {
+        QMap<QString, QString> paramsAttrs;
+        paramsAttrs["moduleID"] = QString::number(moduleID);
+        createXml(result, &de_nodes, "nodes", QString::number(simParams.nodes[moduleID]), paramsAttrs);
+    }
+
+    de_tree.appendChild(de_nodes);
     parent->appendChild(de_tree);
 }
 

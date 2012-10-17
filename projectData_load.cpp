@@ -334,9 +334,26 @@ SimulatorParams ProjectData::loadSimulatorParams(QDomNode dn_node)
             // FIXME: is it work with quint64?
             simulatorParams.timeUnits = TimeUnits(dn_nextNode.toElement().text().toInt());
 
-        // WARNING: this is hack
         if (dn_nextNode.nodeName() == "logFile")
             simulatorParams.logFile = dn_nextNode.toElement().text();
+
+        if (dn_nextNode.nodeName() == "nodesNumber") {
+            QDomNode dn_node = dn_nextNode.firstChild();
+
+            // перебираем узлы, пока не закончатся
+            while (!dn_node.isNull()) {
+                if (dn_node.nodeName() == "nodes") {
+                    QMap<QString, QString> paramsAttrs = loadInfo(dn_node);
+                    quint16 moduleID = paramsAttrs["moduleID"].toInt();
+                    quint16 number = dn_node.toElement().text().toInt();
+
+                    simulatorParams.nodes[moduleID] = number;
+                }
+
+                dn_node = dn_node.nextSibling();                
+            }
+            
+        }
 
         // переходим к следующему узлу
         dn_nextNode = dn_nextNode.nextSibling();
