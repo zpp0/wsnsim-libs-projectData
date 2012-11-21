@@ -94,7 +94,7 @@ Events ProjectData::loadEvents(QDomNode dn_node)
             }
         }
 
-        if (dn_nextNode.nodeName() == "usedPlugins") {
+        if (dn_nextNode.nodeName() == "userEvents") {
             QDomNode dn_userEvents = dn_nextNode.firstChild();
 
             // распознаем дочерние узлы, пока они не закончатся
