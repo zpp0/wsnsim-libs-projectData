@@ -317,6 +317,71 @@ QList<ModuleData> ProjectData::loadModules(QDomNode dn_node)
     return modules;
 }
 
+QList<NodeTypeData> ProjectData::loadNodeTypes(QDomNode dn_node)
+{
+    QList<NodeTypeData> nodeTypes;
+    QDomNode dn_nextNode = dn_node.firstChild();
+
+    // перебираем узлы, пока не закончатся
+    while (!dn_nextNode.isNull()) {
+
+        if (dn_nextNode.nodeName() == "nodeType") {
+            NodeTypeData nodeType;
+            QMap<QString, QString> attrs = loadInfo(dn_nextNode);
+
+            nodeType.name = attrs["name"];
+
+            QDomNode dn_nodeTypeNode = dn_nextNode.firstChild();
+
+            // перебираем узлы, пока не закончатся
+            while (!dn_nodeTypeNode.isNull()) {
+
+                if (dn_nodeTypeNode.nodeName() == "hardware") {
+                    QDomNode dn_hardwareNode = dn_nodeTypeNode.firstChild();
+
+                    while (!dn_hardwareNode.isNull()) {
+                        if (dn_hardwareNode.nodeName() == "module")
+                            nodeType.hardwareModules += dn_nextNode.toElement().text().toUInt();
+
+                        dn_hardwareNode = dn_hardwareNode.nextSibling();
+                    }
+                }
+
+                if (dn_nodeTypeNode.nodeName() == "software") {
+                    QDomNode dn_softwareNode = dn_nodeTypeNode.firstChild();
+
+                    while (!dn_softwareNode.isNull()) {
+                        if (dn_softwareNode.nodeName() == "module")
+                            nodeType.softwareModules += dn_nextNode.toElement().text().toUInt();
+
+                        dn_softwareNode = dn_softwareNode.nextSibling();
+                    }
+                }
+
+                dn_nodeTypeNode = dn_nodeTypeNode.nextSibling();
+            }
+
+            nodeTypes += nodeType;
+
+        }
+
+        // переходим к следующему узлу
+        dn_nextNode = dn_nextNode.nextSibling();
+    }
+
+    qDebug("-- node Types --");
+    foreach(NodeTypeData nodeType, nodeTypes) {
+        qDebug("-- node Type --");
+        qDebug() << "name" << nodeType.name;
+        foreach(quint16 moduleID, nodeType.hardwareModules)
+            qDebug("hardware %ui", moduleID);
+        foreach(quint16 moduleID, nodeType.softwareModules)
+            qDebug("hardware %ui", moduleID);
+    }
+
+    return nodeTypes;
+}
+
 SimulatorParams ProjectData::loadSimulatorParams(QDomNode dn_node)
 {
     SimulatorParams simulatorParams;
@@ -343,16 +408,19 @@ SimulatorParams ProjectData::loadSimulatorParams(QDomNode dn_node)
             // перебираем узлы, пока не закончатся
             while (!dn_node.isNull()) {
                 if (dn_node.nodeName() == "nodes") {
+                    NodesData nodesData;
                     QMap<QString, QString> paramsAttrs = loadInfo(dn_node);
-                    quint16 moduleID = paramsAttrs["moduleID"].toInt();
-                    quint16 number = dn_node.toElement().text().toInt();
 
-                    simulatorParams.nodes[moduleID] = number;
+                    nodesData.moduleID = paramsAttrs["moduleID"].toInt();
+                    nodesData.nodeType = paramsAttrs["nodeType"];
+                    nodesData.nodesNumber = dn_node.toElement().text().toInt();
+
+                    simulatorParams.nodes += nodesData;
                 }
 
-                dn_node = dn_node.nextSibling();                
+                dn_node = dn_node.nextSibling();
             }
-            
+
         }
 
         // переходим к следующему узлу
@@ -425,6 +493,9 @@ ProjectParams ProjectData::load(QString& projectFileName, QString* errorMessage)
 
         if (dn_node.nodeName() == "modules")
             projectParams.modules = loadModules(dn_node);
+
+        if (dn_node.nodeName() == "nodeTypes")
+            projectParams.nodeTypes = loadNodeTypes(dn_node);
 
         if (dn_node.nodeName() == "simulatorParams")
             projectParams.simulatorParams = loadSimulatorParams(dn_node);

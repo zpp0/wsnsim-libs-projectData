@@ -52,10 +52,11 @@ void ProjectData::saveSimulatorParams(QDomDocument* result, QDomElement* parent,
     createXml(result, &de_tree, "logFile", simParams.logFile);
 
     QDomElement de_nodes = result->createElement("nodesNumber");
-    foreach(quint16 moduleID, simParams.nodes.keys()) {
+    foreach(NodesData nodesData, simParams.nodes) {
         QMap<QString, QString> paramsAttrs;
-        paramsAttrs["moduleID"] = QString::number(moduleID);
-        createXml(result, &de_nodes, "nodes", QString::number(simParams.nodes[moduleID]), paramsAttrs);
+        paramsAttrs["moduleID"] = QString::number(nodesData.moduleID);
+        paramsAttrs["nodeType"] = nodesData.nodeType;
+        createXml(result, &de_nodes, "nodes", QString::number(nodesData.nodesNumber), paramsAttrs);
     }
 
     de_tree.appendChild(de_nodes);
@@ -126,6 +127,33 @@ void ProjectData::saveModules(QDomDocument* result, QDomElement* parent, QList<M
     parent->appendChild(de_tree);
 }
 
+void ProjectData::saveNodeTypes(QDomDocument* result, QDomElement* parent, QList<NodeTypeData> nodeTypes)
+{
+    QDomElement de_tree = result->createElement("nodeTypes");
+
+    foreach(NodeTypeData nodeType, nodeTypes) {
+        QDomElement de_nodeType = result->createElement("nodeType");
+
+        // bind the name attribute
+        de_nodeType.setAttribute("name", nodeType.name);
+
+        QDomElement de_hardware = result->createElement("hardware");
+        foreach(quint16 moduleID, nodeType.hardwareModules)
+            createXml(result, &de_hardware, "module", QString::number(moduleID));
+
+        QDomElement de_software = result->createElement("software");
+        foreach(quint16 moduleID, nodeType.softwareModules)
+            createXml(result, &de_hardware, "module", QString::number(moduleID));
+
+        de_nodeType.appendChild(de_hardware);
+        de_nodeType.appendChild(de_software);
+
+        de_tree.appendChild(de_nodeType);
+    }
+
+    parent->appendChild(de_tree);
+}
+
 void ProjectData::saveModulesParams(QDomDocument* result, QDomElement* parent, QList<ModuleParam> moduleParams)
 {
     QDomElement de_tree = result->createElement("params");
@@ -178,6 +206,8 @@ void ProjectData::save(QString& projectFileName, QString* errorMessage, ProjectP
     saveSimulatorParams(&result, &de_resultElement, params.simulatorParams);
 
     saveModules(&result, &de_resultElement, params.modules);
+
+    saveNodeTypes(&result, &de_resultElement, params.nodeTypes);
 
     saveEvents(&result, &de_resultElement, params.events);
 

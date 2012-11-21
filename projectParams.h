@@ -53,6 +53,13 @@ typedef enum timeUnits {
     us, ms, s, m, h, d, w, months, years
 } TimeUnits;
 
+struct NodesData
+{
+    quint16 moduleID;
+    QString nodeType;
+    quint16 nodesNumber;
+};
+
 struct SimulatorParams
 {
     // max simulation time
@@ -61,9 +68,8 @@ struct SimulatorParams
     TimeUnits timeUnits;
     // log file
     QString logFile;
-    // nodes number
-    // moduleID -> nodesNumber
-    QMap<quint16, quint16> nodes;
+    // nodes numbers
+    QList<NodesData> nodes;
 };
 
 struct ModuleParam
@@ -84,6 +90,11 @@ struct ModuleData
     QList<ModuleParam> params;
     // dependName -> <dependType, moduleID>
     QMap<QString, QPair<QString, quint16> > dependencies;
+struct NodeTypeData
+{
+    QString name;
+    QList<quint16> hardwareModules;
+    QList<quint16> softwareModules;
 };
 
 /**
@@ -130,6 +141,7 @@ struct ProjectParams
     QString version;
     ProjectInfo projectInfo;
     SimulatorParams simulatorParams;
+    QList<NodeTypeData> nodeTypes;
     QList<ModuleData> modules;
     Events events;
     QList<LogFileInfo> logFiles;
