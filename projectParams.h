@@ -82,14 +82,22 @@ struct ModuleParam
     QVariant value;
 };
 
+struct ModuleDependence
+{
+    QString name;
+    QString type;
+    quint16 moduleID;
+};
+
 struct ModuleData
 {
     // moduleInfo contains name, implementation's lang
     ModuleInfo moduleInfo;
     QString fileName;
     QList<ModuleParam> params;
-    // dependName -> <dependType, moduleID>
-    QMap<QString, QPair<QString, quint16> > dependencies;
+    QList<ModuleDependence> dependencies;
+};
+
 struct NodeTypeData
 {
     QString name;

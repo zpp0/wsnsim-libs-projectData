@@ -111,11 +111,11 @@ void ProjectData::saveModules(QDomDocument* result, QDomElement* parent, QList<M
         // creating dependences subtree
         QDomElement de_dependencies = result->createElement("dependencies");
 
-        foreach (QString moduleName, module.dependencies.keys()) {
+        foreach (ModuleDependence moduleDep, module.dependencies) {
             QMap<QString, QString> paramsAttrs;
-            paramsAttrs["name"] = moduleName;
-            paramsAttrs["type"] = module.dependencies[moduleName].first;
-            createXml(result, &de_dependencies, "module", QString::number(module.dependencies[moduleName].second));
+            paramsAttrs["name"] = moduleDep.name;
+            paramsAttrs["type"] = moduleDep.type;
+            createXml(result, &de_dependencies, "module", QString::number(moduleDep.moduleID), paramsAttrs);
         }
 
         // append dependencies subtree to module subtree

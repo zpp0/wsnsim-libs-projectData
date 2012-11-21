@@ -258,23 +258,25 @@ ModuleData ProjectData::loadModule(QDomNode dn_node)
 
         // getting dependencies
         if (dn_nextNode.nodeName() == "dependencies") {
-            QMap<QString, QPair<QString, quint16> >  dependencies;
             QDomNode dn_dependNode = dn_nextNode.firstChild();
 
             // перебираем узлы, пока не закончатся
             while (!dn_dependNode.isNull()) {
                 // module
                 if (dn_dependNode.nodeName() == "module") {
-                    quint16 ID = dn_dependNode.toElement().text().toInt();
+                    ModuleDependence depend;
+                    depend.moduleID = dn_dependNode.toElement().text().toInt();
                     QMap<QString, QString> info = loadInfo(dn_dependNode);
-                    dependencies[info["name"]] = qMakePair(info["type"], ID);
+                    depend.name = info["name"];
+                    depend.type = info["type"];
+
+                    module.dependencies += depend;
                 }
 
                 // переходим к следующему узлу
                 dn_dependNode = dn_dependNode.nextSibling();
             }
 
-            module.dependencies = dependencies;
         }
 
         // переходим к следующему узлу
@@ -310,8 +312,8 @@ QList<ModuleData> ProjectData::loadModules(QDomNode dn_node)
         foreach(ModuleParam param, module.params)
             qDebug("param %s of type %s with value %s",
                    qPrintable(param.name), qPrintable(param.type), qPrintable(param.value.toString()));
-        foreach(QString dependName, module.dependencies.keys())
-            qDebug("module depends on %u", module.dependencies[dependName].second);
+        foreach(ModuleDependence depend, module.dependencies)
+            qDebug("module depends on %u", depend.moduleID);
     }
 
     return modules;
