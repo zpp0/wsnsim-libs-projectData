@@ -38,7 +38,7 @@ void ProjectData::saveProjectInfo(QDomDocument* result, QDomElement* parent, Pro
 
     createXml(result, &de_projectInfo, "keywords", info.keywords.join(" "));
     createXml(result, &de_projectInfo, "revision", QString::number(info.revision));
-    createXml(result, &de_projectInfo, "modified", QString::number(info.modified));
+    createXml(result, &de_projectInfo, "modified", info.modified);
 
     parent->appendChild(de_projectInfo);
 }
@@ -199,6 +199,7 @@ void ProjectData::save(QString& projectFileName, QString* errorMessage, ProjectP
     // создаем узел main, дочерними которого будут все остальные узлы
     QDomElement de_resultElement = result.createElement("project");
     de_resultElement.setAttribute("version", params.version);
+    de_resultElement.setAttribute("uuid", params.uuid);
 
     // сохраняем параметры проекта
     saveProjectInfo(&result, &de_resultElement, params.projectInfo);

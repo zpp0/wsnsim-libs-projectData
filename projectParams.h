@@ -44,8 +44,8 @@ struct ProjectInfo
     // saves count
     int revision;
 
-    // last modified in unix-time
-    quint64 modified;
+    // last modified
+    QString modified;
 };
 
 // Единицы измерений времени работы симулятора
@@ -146,6 +146,7 @@ struct Events
  **/
 struct ProjectParams
 {
+    QString uuid;
     QString version;
     ProjectInfo projectInfo;
     SimulatorParams simulatorParams;

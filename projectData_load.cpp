@@ -1,6 +1,6 @@
 /**
  *
- * File: projectData_save.cpp
+ * File: projectData_load.cpp
  * Description: methods of loading project data from XML
  * Author: Yarygin Alexander <yarygin.alexander@gmail.com>
  *
@@ -46,7 +46,7 @@ ProjectInfo ProjectData::loadProjectInfo(QDomNode dn_node)
     foreach(QString keyword, projectInfo.keywords)
         qDebug("keyword is %s", qPrintable(keyword));
     qDebug("revision number is %i", projectInfo.revision);
-    qDebug("last modified at %llu", projectInfo.modified);
+    // qDebug("last modified at %llu", projectInfo.modified);
 
     // возвращаем результат
     return projectInfo;
@@ -479,7 +479,9 @@ ProjectParams ProjectData::load(QString& projectFileName, QString* errorMessage)
     // переходим к данным XML
     QDomElement de_root = dd_doc.documentElement();
 
-    projectParams.version = de_root.text();
+    QMap<QString, QString> attrs = loadInfo(de_root);
+    projectParams.version = attrs["version"];
+    projectParams.uuid = attrs["uuid"];
 
     QDomNode dn_node = de_root.firstChild();
 
