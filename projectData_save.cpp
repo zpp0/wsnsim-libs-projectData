@@ -165,8 +165,27 @@ void ProjectData::saveModulesParams(QDomDocument* result, QDomElement* parent, Q
         paramsAttrs["type"] = param.type;
 
         if (param.type == "table") {
+            QDomElement de_param = result->createElement("param");
 
-            // TODO: implement this
+            de_param.setAttribute("name", param.name);
+            de_param.setAttribute("type", param.type);
+
+            QMap<QString, QVariant> value = param.value.toMap();
+            foreach(QString column, value.keys()) {
+
+                QDomElement de_column = result->createElement("column");
+                de_column.setAttribute("name", column);
+
+                foreach(QString row, value[column].toMap().keys()) {
+                    QMap<QString, QString> attrs;
+                    attrs["num"] = row;
+                    QString svalue = QString::number(value[column].toMap()[row].toDouble());
+                    createXml(result, &de_column, "row", svalue, attrs);
+                }
+
+                de_param.appendChild(de_column);
+            }
+            de_tree.appendChild(de_param);
         }
         if (param.type == "Probability distribution") {
             // TODO: implement this

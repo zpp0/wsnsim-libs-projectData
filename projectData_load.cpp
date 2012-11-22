@@ -213,9 +213,37 @@ QList<ModuleParam> ProjectData::loadModuleParams(QDomNode dn_node)
             param.name = attrs["name"];
             param.type = attrs["type"];
 
-            // getting value of param
             if (param.type == "table") {
-                // TODO: implement this
+                QMap<QString, QVariant> value;
+
+                QDomNode dn_table = dn_nextNode.firstChild();
+                while (!dn_table.isNull()) {
+
+                    if (dn_table.nodeName() == "column") {
+                        QMap<QString, QVariant> rows;
+
+                        QMap<QString, QString> attrs = loadInfo(dn_table);
+
+                        QString column = attrs["name"];
+                        QDomNode dn_row = dn_table.firstChild();
+
+                        while(!dn_row.isNull()) {
+                            if (dn_row.nodeName() == "row") {
+                                QMap<QString, QString> attrs = loadInfo(dn_row);
+                                QString row = attrs["num"];
+                                double value = dn_row.toElement().text().toDouble();
+                                rows[row] = value;
+                            }
+
+                            dn_row = dn_row.nextSibling();
+                        }
+
+                        value[column] = rows;
+                    }
+
+                    dn_table = dn_table.nextSibling();
+                }
+                param.value = value;
             }
             if (param.type == "Probability distribution") {
                 // TODO: implement this
