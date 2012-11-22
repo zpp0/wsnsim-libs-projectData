@@ -187,9 +187,28 @@ void ProjectData::saveModulesParams(QDomDocument* result, QDomElement* parent, Q
             }
             de_tree.appendChild(de_param);
         }
-        if (param.type == "Probability distribution") {
+
+        else if (param.type == "Probability distribution") {
             // TODO: implement this
         }
+
+        else if (param.type == "nodes") {
+            QDomElement de_param = result->createElement("param");
+
+            de_param.setAttribute("name", param.name);
+            de_param.setAttribute("type", param.type);
+
+            QVariantMap value = param.value.toMap();
+
+            foreach(QString nodeType, value.keys()) {
+                QMap<QString, QString> attrs;
+                attrs["name"] = nodeType;
+                createXml(result, &de_param, "nodeType", QString::number(value[nodeType].toInt()), attrs);
+            }
+            de_tree.appendChild(de_param);
+
+        }
+
         else
             createXml(result, &de_tree, "param", param.value.toString(), paramsAttrs);
 

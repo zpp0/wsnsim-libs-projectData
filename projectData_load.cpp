@@ -245,9 +245,29 @@ QList<ModuleParam> ProjectData::loadModuleParams(QDomNode dn_node)
                 }
                 param.value = value;
             }
-            if (param.type == "Probability distribution") {
+
+            else if (param.type == "nodes") {
+                QMap<QString, QVariant> value;
+
+                QDomNode dn_nodes = dn_nextNode.firstChild();
+                while (!dn_nodes.isNull()) {
+
+                    if (dn_nodes.nodeName() == "nodeType") {
+                        QMap<QString, QString> attrs = loadInfo(dn_nodes);
+                        QString name = attrs["name"];
+                        value[name] = dn_nodes.toElement().text().toInt();
+                    }
+
+                    dn_nodes = dn_nodes.nextSibling();
+                }
+
+                param.value = value;
+            }
+
+            else if (param.type == "Probability distribution") {
                 // TODO: implement this
             }
+
             // other types
             else
                 param.value = dn_nextNode.toElement().text();
