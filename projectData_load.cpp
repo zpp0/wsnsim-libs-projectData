@@ -391,7 +391,7 @@ QList<NodeTypeData> ProjectData::loadNodeTypes(QDomNode dn_node)
 
                     while (!dn_hardwareNode.isNull()) {
                         if (dn_hardwareNode.nodeName() == "module")
-                            nodeType.hardwareModules += dn_nextNode.toElement().text().toUInt();
+                            nodeType.hardwareModules += dn_hardwareNode.toElement().text().toUInt();
 
                         dn_hardwareNode = dn_hardwareNode.nextSibling();
                     }
@@ -402,7 +402,7 @@ QList<NodeTypeData> ProjectData::loadNodeTypes(QDomNode dn_node)
 
                     while (!dn_softwareNode.isNull()) {
                         if (dn_softwareNode.nodeName() == "module")
-                            nodeType.softwareModules += dn_nextNode.toElement().text().toUInt();
+                            nodeType.softwareModules += dn_softwareNode.toElement().text().toUInt();
 
                         dn_softwareNode = dn_softwareNode.nextSibling();
                     }
