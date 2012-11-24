@@ -219,26 +219,26 @@ QList<ModuleParam> ProjectData::loadModuleParams(QDomNode dn_node)
                 QDomNode dn_table = dn_nextNode.firstChild();
                 while (!dn_table.isNull()) {
 
-                    if (dn_table.nodeName() == "column") {
-                        QMap<QString, QVariant> rows;
+                    if (dn_table.nodeName() == "row") {
+                        QMap<QString, QVariant> columns;
 
                         QMap<QString, QString> attrs = loadInfo(dn_table);
 
-                        QString column = attrs["name"];
+                        QString row = attrs["num"];
                         QDomNode dn_row = dn_table.firstChild();
 
                         while(!dn_row.isNull()) {
-                            if (dn_row.nodeName() == "row") {
+                            if (dn_row.nodeName() == "column") {
                                 QMap<QString, QString> attrs = loadInfo(dn_row);
-                                QString row = attrs["num"];
+                                QString column = attrs["name"];
                                 double value = dn_row.toElement().text().toDouble();
-                                rows[row] = value;
+                                columns[column] = value;
                             }
 
                             dn_row = dn_row.nextSibling();
                         }
 
-                        value[column] = rows;
+                        value[row] = columns;
                     }
 
                     dn_table = dn_table.nextSibling();

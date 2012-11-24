@@ -171,19 +171,19 @@ void ProjectData::saveModulesParams(QDomDocument* result, QDomElement* parent, Q
             de_param.setAttribute("type", param.type);
 
             QMap<QString, QVariant> value = param.value.toMap();
-            foreach(QString column, value.keys()) {
+            foreach(QString row, value.keys()) {
 
-                QDomElement de_column = result->createElement("column");
-                de_column.setAttribute("name", column);
+                QDomElement de_row = result->createElement("row");
+                de_row.setAttribute("num", row);
 
-                foreach(QString row, value[column].toMap().keys()) {
+                foreach(QString column, value[row].toMap().keys()) {
                     QMap<QString, QString> attrs;
-                    attrs["num"] = row;
-                    QString svalue = QString::number(value[column].toMap()[row].toDouble());
-                    createXml(result, &de_column, "row", svalue, attrs);
+                    attrs["name"] = column;
+                    QString svalue = QString::number(value[row].toMap()[column].toDouble());
+                    createXml(result, &de_row, "column", svalue, attrs);
                 }
 
-                de_param.appendChild(de_column);
+                de_param.appendChild(de_row);
             }
             de_tree.appendChild(de_param);
         }
