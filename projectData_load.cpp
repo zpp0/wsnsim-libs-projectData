@@ -484,6 +484,36 @@ SimulatorParams ProjectData::loadSimulatorParams(QDomNode dn_node)
     return simulatorParams;
 }
 
+VisualizationInfo ProjectData::loadVisualizationInfo(QDomElement de_root)
+{
+    VisualizationInfo visualizationInfo;
+
+    QDomNode dn_node = de_root.firstChild();
+
+    // перебираем узлы, пока не закончатся
+    while (!dn_node.isNull()) {
+        if (dn_node.nodeName() == "formatsSettings")
+        {
+            QDomElement element = dn_node.toElement();
+            QString value = element.attribute("value");
+
+            visualizationInfo.formatsSettings = value;
+        }
+
+        if (dn_node.nodeName() == "columnsSettings")
+        {
+            QDomElement element = dn_node.toElement();
+            QString value = element.attribute("value");
+
+            visualizationInfo.columnsSettings = value;
+        }
+
+        dn_node = dn_node.nextSibling();
+    }
+
+    return visualizationInfo;
+}
+
 ProjectParams ProjectData::load(QString& projectFileName, QString* errorMessage)
 {
 
