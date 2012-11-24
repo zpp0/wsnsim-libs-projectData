@@ -559,6 +559,8 @@ ProjectParams ProjectData::load(QString& projectFileName, QString* errorMessage)
         dn_node = dn_node.nextSibling();
     }
 
+    projectParams.visualizationInfo = loadVisualizationInfo(de_root);
+
     qDebug("end");
 
     // возвращаем результат

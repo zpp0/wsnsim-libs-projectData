@@ -30,6 +30,12 @@ typedef AttrInfo LogFileInfo;
 typedef AttrInfo EventArgument;
 typedef AttrInfo ModuleInfo;
 
+struct VisualizationInfo
+{
+    QString columnsSettings;
+    QString formatsSettings;
+};
+
 struct ProjectInfo
 {
     // name of the author of the project
@@ -154,6 +160,7 @@ struct ProjectParams
     QList<ModuleData> modules;
     Events events;
     QList<LogFileInfo> logFiles;
+    VisualizationInfo visualizationInfo;
 };
 
 #endif // PROJECTPARAMS_H
