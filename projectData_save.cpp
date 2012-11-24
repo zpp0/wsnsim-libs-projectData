@@ -231,6 +231,14 @@ void ProjectData::save(QString& projectFileName, QString* errorMessage, ProjectP
 {
     QFile file(projectFileName);
 
+    if(params.visualizationInfo.columnsSettings == ""
+            && params.visualizationInfo.formatsSettings == ""
+            && file.exists())
+    {
+        ProjectParams oldParams = load(projectFileName, errorMessage);
+        params.visualizationInfo = oldParams.visualizationInfo;
+    }
+
     // создаем объект с данными XML
     // в него сначала будут записаны все данные, потом он записывается в файл
     QDomDocument result;
@@ -251,6 +259,8 @@ void ProjectData::save(QString& projectFileName, QString* errorMessage, ProjectP
     saveEvents(&result, &de_resultElement, params.events);
 
     saveLogFiles(&result, &de_resultElement, params.logFiles);
+
+    saveVisualizationInfo(&result, &de_resultElement, params.visualizationInfo);
 
     // открываем файл на запись
     if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {

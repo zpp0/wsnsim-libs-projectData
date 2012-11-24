@@ -59,6 +59,13 @@ private:
 
     void createXml(QDomDocument* result, QDomElement* parent, QString XNodeName, QString XNodeValue);
     void createXml(QDomDocument* result, QDomElement* parent, QString XNodeName, QString XNodeValue, QMap<QString, QString> attrs);
+
+    // visualization info methods
+    bool isInjectedFormatsSettings(QDomElement de_root);
+    bool isInjectedColumnsSettings(QDomElement de_root);
+
+    VisualizationInfo loadVisualizationInfo(QDomElement de_root);
+    void saveVisualizationInfo(QDomDocument* result, QDomElement *parent, VisualizationInfo visualizationInfo);
 };
 
 #ifdef Q_WS_WIN
