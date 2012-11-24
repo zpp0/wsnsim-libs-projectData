@@ -229,13 +229,17 @@ void ProjectData::saveLogFiles(QDomDocument* result, QDomElement* parent, QList<
 
 void ProjectData::saveVisualizationInfo(QDomDocument *result, QDomElement *parent, VisualizationInfo visualizationInfo)
 {
+    QDomElement de_visualizationInfo = result->createElement("visualizationInfo");
+
     QDomElement de_formats = result->createElement("formatsSettings");
     de_formats.setAttribute("value", visualizationInfo.formatsSettings);
-    parent->appendChild(de_formats);
+    de_visualizationInfo.appendChild(de_formats);
 
     QDomElement de_columns = result->createElement("columnsSettings");
     de_columns.setAttribute("value", visualizationInfo.columnsSettings);
-    parent->appendChild(de_columns);
+    de_visualizationInfo.appendChild(de_columns);
+
+    parent->appendChild(de_visualizationInfo);
 }
 
 void ProjectData::save(QString& projectFileName, QString* errorMessage, ProjectParams params)

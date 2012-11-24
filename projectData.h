@@ -60,7 +60,7 @@ private:
     void createXml(QDomDocument* result, QDomElement* parent, QString XNodeName, QString XNodeValue);
     void createXml(QDomDocument* result, QDomElement* parent, QString XNodeName, QString XNodeValue, QMap<QString, QString> attrs);
 
-    VisualizationInfo loadVisualizationInfo(QDomElement de_root);
+    VisualizationInfo loadVisualizationInfo(QDomNode dn_tree);
     void saveVisualizationInfo(QDomDocument* result, QDomElement *parent, VisualizationInfo visualizationInfo);
 };
 

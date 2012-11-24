@@ -484,11 +484,11 @@ SimulatorParams ProjectData::loadSimulatorParams(QDomNode dn_node)
     return simulatorParams;
 }
 
-VisualizationInfo ProjectData::loadVisualizationInfo(QDomElement de_root)
+VisualizationInfo ProjectData::loadVisualizationInfo(QDomNode dn_tree)
 {
     VisualizationInfo visualizationInfo;
 
-    QDomNode dn_node = de_root.firstChild();
+    QDomNode dn_node = dn_tree.firstChild();
 
     // перебираем узлы, пока не закончатся
     while (!dn_node.isNull()) {
@@ -585,11 +585,12 @@ ProjectParams ProjectData::load(QString& projectFileName, QString* errorMessage)
         if (dn_node.nodeName() == "logFiles")
             projectParams.logFiles = loadLogFiles(dn_node);
 
+        if (dn_node.nodeName() == "visualizationInfo")
+            projectParams.visualizationInfo = loadVisualizationInfo(dn_node);
+
         // переходим к следующему узлу XML
         dn_node = dn_node.nextSibling();
     }
-
-    projectParams.visualizationInfo = loadVisualizationInfo(de_root);
 
     qDebug("end");
 
