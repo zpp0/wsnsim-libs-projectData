@@ -43,6 +43,7 @@ private:
     QList<NodeTypeData> loadNodeTypes(QDomNode dn_node);
     Events loadEvents(QDomNode dn_node);
     QList<LogFileInfo> loadLogFiles(QDomNode dn_node);
+    IndexFileInfo loadIndexFileInfo(QDomNode dn_node);
 
     ModuleData loadModule(QDomNode dn_node);
     QList<ModuleParam> loadModuleParams(QDomNode dn_node);
@@ -56,6 +57,7 @@ private:
     void saveEventParams(QDomDocument* result, QDomElement* parent, EventParams eventParams);
     void saveEvents(QDomDocument* result, QDomElement* parent, Events events);
     void saveLogFiles(QDomDocument* result, QDomElement* parent, QList<LogFileInfo> logFilesInfo);
+    void saveIndexFileInfo(QDomDocument *result, QDomElement *parent, IndexFileInfo indexFileInfo);
 
     void createXml(QDomDocument* result, QDomElement* parent, QString XNodeName, QString XNodeValue);
     void createXml(QDomDocument* result, QDomElement* parent, QString XNodeName, QString XNodeValue, QMap<QString, QString> attrs);

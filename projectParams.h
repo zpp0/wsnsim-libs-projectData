@@ -27,6 +27,7 @@
 typedef QMap<QString, QString> AttrInfo;
 typedef AttrInfo EventInfo;
 typedef AttrInfo LogFileInfo;
+typedef AttrInfo IndexFileInfo;
 typedef AttrInfo EventArgument;
 typedef AttrInfo ModuleInfo;
 
@@ -160,6 +161,7 @@ struct ProjectParams
     QList<ModuleData> modules;
     Events events;
     QList<LogFileInfo> logFiles;
+    IndexFileInfo indexFileInfo;
     VisualizationInfo visualizationInfo;
 };
 
