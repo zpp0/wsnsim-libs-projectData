@@ -227,6 +227,15 @@ void ProjectData::saveLogFiles(QDomDocument* result, QDomElement* parent, QList<
     parent->appendChild(de_tree);
 }
 
+void ProjectData::saveIndexFileInfo(QDomDocument *result, QDomElement *parent, IndexFileInfo indexFileInfo)
+{
+    QDomElement de_tree = result->createElement("indexFileInfo");
+
+    createXml(result, &de_tree, "indexFile", "", indexFileInfo);
+
+    parent->appendChild(de_tree);
+}
+
 void ProjectData::saveVisualizationInfo(QDomDocument *result, QDomElement *parent, VisualizationInfo visualizationInfo)
 {
     QDomElement de_visualizationInfo = result->createElement("visualizationInfo");
@@ -266,6 +275,8 @@ void ProjectData::save(QString& projectFileName, QString* errorMessage, ProjectP
     saveEvents(&result, &de_resultElement, params.events);
 
     saveLogFiles(&result, &de_resultElement, params.logFiles);
+
+    saveIndexFileInfo(&result, &de_resultElement, params.indexFileInfo);
 
     saveVisualizationInfo(&result, &de_resultElement, params.visualizationInfo);
 

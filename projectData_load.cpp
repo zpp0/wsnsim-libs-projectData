@@ -177,6 +177,27 @@ QList<LogFileInfo> ProjectData::loadLogFiles(QDomNode dn_node)
     return logFiles;
 }
 
+IndexFileInfo ProjectData::loadIndexFileInfo(QDomNode dn_node)
+{
+    IndexFileInfo indexFileInfo;
+
+    QDomNode dn_nextNode = dn_node.firstChild();
+
+    // перебираем узлы, пока не закончатся
+    while (!dn_nextNode.isNull()) {
+
+        // узел - version
+        if (dn_nextNode.nodeName() == "indexFile")
+            indexFileInfo = loadInfo(dn_nextNode);
+
+        // переходим к следующему узлу
+        dn_nextNode = dn_nextNode.nextSibling();
+    }
+
+    // возвращаем результат
+    return indexFileInfo;
+}
+
 AttrInfo ProjectData::loadInfo(QDomNode dn_node)
 {
     AttrInfo info;
@@ -584,6 +605,9 @@ ProjectParams ProjectData::load(QString& projectFileName, QString* errorMessage)
 
         if (dn_node.nodeName() == "logFiles")
             projectParams.logFiles = loadLogFiles(dn_node);
+
+        if (dn_node.nodeName() == "indexFileInfo")
+            projectParams.indexFileInfo = loadIndexFileInfo(dn_node);
 
         if (dn_node.nodeName() == "visualizationInfo")
             projectParams.visualizationInfo = loadVisualizationInfo(dn_node);
