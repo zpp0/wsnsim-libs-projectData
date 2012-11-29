@@ -388,6 +388,31 @@ QList<ModuleData> ProjectData::loadModules(QDomNode dn_node)
     return modules;
 }
 
+QList<NodesData> ProjectData::loadNodes(QDomNode dn_nextNode)
+{
+    QList<NodesData> nodes;
+
+    QDomNode dn_node = dn_nextNode.firstChild();
+
+    // перебираем узлы, пока не закончатся
+    while (!dn_node.isNull()) {
+        if (dn_node.nodeName() == "nodes") {
+            NodesData nodesData;
+            QMap<QString, QString> paramsAttrs = loadInfo(dn_node);
+
+            nodesData.moduleID = paramsAttrs["moduleID"].toInt();
+            nodesData.nodeType = paramsAttrs["nodeType"];
+            nodesData.nodesNumber = dn_node.toElement().text().toInt();
+
+            nodes += nodesData;
+        }
+
+        dn_node = dn_node.nextSibling();
+    }
+
+    return nodes;
+}
+
 QList<NodeTypeData> ProjectData::loadNodeTypes(QDomNode dn_node)
 {
     QList<NodeTypeData> nodeTypes;
@@ -472,27 +497,6 @@ SimulatorParams ProjectData::loadSimulatorParams(QDomNode dn_node)
 
         if (dn_nextNode.nodeName() == "logFile")
             simulatorParams.logFile = dn_nextNode.toElement().text();
-
-        if (dn_nextNode.nodeName() == "nodesNumber") {
-            QDomNode dn_node = dn_nextNode.firstChild();
-
-            // перебираем узлы, пока не закончатся
-            while (!dn_node.isNull()) {
-                if (dn_node.nodeName() == "nodes") {
-                    NodesData nodesData;
-                    QMap<QString, QString> paramsAttrs = loadInfo(dn_node);
-
-                    nodesData.moduleID = paramsAttrs["moduleID"].toInt();
-                    nodesData.nodeType = paramsAttrs["nodeType"];
-                    nodesData.nodesNumber = dn_node.toElement().text().toInt();
-
-                    simulatorParams.nodes += nodesData;
-                }
-
-                dn_node = dn_node.nextSibling();
-            }
-
-        }
 
         // переходим к следующему узлу
         dn_nextNode = dn_nextNode.nextSibling();
@@ -596,6 +600,9 @@ ProjectParams ProjectData::load(QString& projectFileName, QString* errorMessage)
 
         if (dn_node.nodeName() == "modules")
             projectParams.modules = loadModules(dn_node);
+
+        if (dn_node.nodeName() == "nodesNumber")
+            projectParams.nodes = loadNodes(dn_node);
 
         if (dn_node.nodeName() == "nodeTypes")
             projectParams.nodeTypes = loadNodeTypes(dn_node);

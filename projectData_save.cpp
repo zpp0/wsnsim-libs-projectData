@@ -51,15 +51,6 @@ void ProjectData::saveSimulatorParams(QDomDocument* result, QDomElement* parent,
     createXml(result, &de_tree, "timeUnits", QString::number(simParams.timeUnits));
     createXml(result, &de_tree, "logFile", simParams.logFile);
 
-    QDomElement de_nodes = result->createElement("nodesNumber");
-    foreach(NodesData nodesData, simParams.nodes) {
-        QMap<QString, QString> paramsAttrs;
-        paramsAttrs["moduleID"] = QString::number(nodesData.moduleID);
-        paramsAttrs["nodeType"] = nodesData.nodeType;
-        createXml(result, &de_nodes, "nodes", QString::number(nodesData.nodesNumber), paramsAttrs);
-    }
-
-    de_tree.appendChild(de_nodes);
     parent->appendChild(de_tree);
 }
 
@@ -125,6 +116,19 @@ void ProjectData::saveModules(QDomDocument* result, QDomElement* parent, QList<M
     }
 
     parent->appendChild(de_tree);
+}
+
+void ProjectData::saveNodes(QDomDocument* result, QDomElement* parent, QList<NodesData> nodes)
+{
+    QDomElement de_nodes = result->createElement("nodesNumber");
+    foreach(NodesData nodesData, nodes) {
+        QMap<QString, QString> paramsAttrs;
+        paramsAttrs["moduleID"] = QString::number(nodesData.moduleID);
+        paramsAttrs["nodeType"] = nodesData.nodeType;
+        createXml(result, &de_nodes, "nodes", QString::number(nodesData.nodesNumber), paramsAttrs);
+    }
+
+    parent->appendChild(de_nodes);
 }
 
 void ProjectData::saveNodeTypes(QDomDocument* result, QDomElement* parent, QList<NodeTypeData> nodeTypes)
@@ -269,6 +273,8 @@ void ProjectData::save(QString& projectFileName, QString* errorMessage, ProjectP
     saveSimulatorParams(&result, &de_resultElement, params.simulatorParams);
 
     saveModules(&result, &de_resultElement, params.modules);
+
+    saveNodes(&result, &de_resultElement, params.nodes);
 
     saveNodeTypes(&result, &de_resultElement, params.nodeTypes);
 

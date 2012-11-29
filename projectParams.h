@@ -75,8 +75,6 @@ struct SimulatorParams
     TimeUnits timeUnits;
     // log file
     QString logFile;
-    // nodes numbers
-    QList<NodesData> nodes;
 };
 
 struct ModuleParam
@@ -158,6 +156,8 @@ struct ProjectParams
     ProjectInfo projectInfo;
     SimulatorParams simulatorParams;
     QList<NodeTypeData> nodeTypes;
+    // nodes numbers
+    QList<NodesData> nodes;
     QList<ModuleData> modules;
     Events events;
     QList<LogFileInfo> logFiles;

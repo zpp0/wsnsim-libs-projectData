@@ -41,6 +41,7 @@ private:
     EventParams loadEventParams(QDomNode dn_node);
     QList<ModuleData> loadModules(QDomNode dn_node);
     QList<NodeTypeData> loadNodeTypes(QDomNode dn_node);
+    QList<NodesData> loadNodes(QDomNode dn_node);
     Events loadEvents(QDomNode dn_node);
     QList<LogFileInfo> loadLogFiles(QDomNode dn_node);
     IndexFileInfo loadIndexFileInfo(QDomNode dn_node);
@@ -51,6 +52,7 @@ private:
     // void saveInfo(QDomElement* parent, AttrInfo info);
     void saveProjectInfo(QDomDocument* result, QDomElement* parent, ProjectInfo info);
     void saveNodeTypes(QDomDocument* result, QDomElement* parent, QList<NodeTypeData> nodeTypes);
+    void saveNodes(QDomDocument* result, QDomElement* parent, QList<NodesData> nodes);
     void saveModules(QDomDocument* result, QDomElement* parent, QList<ModuleData> modules);
     void saveModulesParams(QDomDocument* result, QDomElement* parent, QList<ModuleParam> modulesParams);
     void saveSimulatorParams(QDomDocument* result, QDomElement* parent, SimulatorParams simParams);
