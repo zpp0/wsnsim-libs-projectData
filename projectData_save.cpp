@@ -147,7 +147,7 @@ void ProjectData::saveNodeTypes(QDomDocument* result, QDomElement* parent, QList
 
         QDomElement de_software = result->createElement("software");
         foreach(quint16 moduleID, nodeType.softwareModules)
-            createXml(result, &de_hardware, "module", QString::number(moduleID));
+            createXml(result, &de_software, "module", QString::number(moduleID));
 
         de_nodeType.appendChild(de_hardware);
         de_nodeType.appendChild(de_software);
