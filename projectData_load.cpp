@@ -533,6 +533,14 @@ VisualizationInfo ProjectData::loadVisualizationInfo(QDomNode dn_tree)
             visualizationInfo.columnsSettings = value;
         }
 
+        if(dn_node.nodeName() == "bookmarksSettings")
+        {
+            QDomElement element = dn_node.toElement();
+            QString value = element.attribute("value");
+
+            visualizationInfo.bookmarksSettings = value;
+        }
+
         dn_node = dn_node.nextSibling();
     }
 
