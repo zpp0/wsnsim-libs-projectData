@@ -68,13 +68,4 @@ private:
     void saveVisualizationInfo(QDomDocument* result, QDomElement *parent, VisualizationInfo visualizationInfo);
 };
 
-#ifdef Q_WS_WIN
-#define MY_EXPORT __declspec(dllexport)
-#else
-#define MY_EXPORT
-#endif
-
-extern "C" MY_EXPORT ProjectParams load(QString& projectFileName, QString* errorMessage);
-extern "C" MY_EXPORT void save(QString& projectFileName, QString* errorMessage, ProjectParams params);
-
 #endif // PROJECTDATA_H
