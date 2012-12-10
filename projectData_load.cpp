@@ -332,12 +332,23 @@ ModuleData ProjectData::loadModule(QDomNode dn_node)
             // перебираем узлы, пока не закончатся
             while (!dn_dependNode.isNull()) {
                 // module
-                if (dn_dependNode.nodeName() == "module") {
+                if (dn_dependNode.nodeName() == "dependence") {
                     ModuleDependence depend;
-                    depend.moduleID = dn_dependNode.toElement().text().toInt();
                     QMap<QString, QString> info = loadInfo(dn_dependNode);
                     depend.name = info["name"];
                     depend.type = info["type"];
+                    depend.hasFunctions = info["hasFunctions"];
+                    depend.moduleID = info["ID"].toUInt();
+
+                    QDomNode dn_param = dn_dependNode.firstChild();
+                    while (!dn_param.isNull()) {
+                        if (dn_param.nodeName() == "param") {
+                            QString event = dn_param.toElement().text();
+                            depend.events[event] += loadInfo(dn_param);
+                        }
+
+                        dn_param = dn_param.nextSibling();
+                    }
 
                     module.dependencies += depend;
                 }

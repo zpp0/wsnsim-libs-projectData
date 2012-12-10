@@ -103,15 +103,26 @@ void ProjectData::saveModules(QDomDocument* result, QDomElement* parent, QList<M
         QDomElement de_dependencies = result->createElement("dependencies");
 
         foreach (ModuleDependence moduleDep, module.dependencies) {
-            QMap<QString, QString> paramsAttrs;
-            paramsAttrs["name"] = moduleDep.name;
-            paramsAttrs["type"] = moduleDep.type;
-            createXml(result, &de_dependencies, "module", QString::number(moduleDep.moduleID), paramsAttrs);
+
+            QDomElement de_dependence = result->createElement("dependence");
+
+            de_dependence.setAttribute("name", moduleDep.name);
+            de_dependence.setAttribute("type", moduleDep.type);
+            de_dependence.setAttribute("hasFunctions", moduleDep.hasFunctions);
+            de_dependence.setAttribute("ID", QString::number(moduleDep.moduleID));
+
+            foreach(QString event, moduleDep.events.keys())
+                foreach(EventArgument param, moduleDep.events[event])
+                    createXml(result, &de_dependence, "param", event, param);
+
+            // append dependencies subtree to module subtree
+            de_dependencies.appendChild(de_dependence);
+
         }
 
-        // append dependencies subtree to module subtree
-        de_module.appendChild(de_dependencies);
         // append module subtree to global tree
+
+        de_module.appendChild(de_dependencies);
         de_tree.appendChild(de_module);
     }
 

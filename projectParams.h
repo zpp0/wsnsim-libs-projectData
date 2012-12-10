@@ -91,6 +91,8 @@ struct ModuleDependence
 {
     QString name;
     QString type;
+    QString hasFunctions;
+    QMap<QString, QList<EventArgument> > events;
     quint16 moduleID;
 };
 
