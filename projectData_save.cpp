@@ -263,6 +263,10 @@ void ProjectData::saveVisualizationInfo(QDomDocument *result, QDomElement *paren
     de_columns.setAttribute("value", visualizationInfo.columnsSettings);
     de_visualizationInfo.appendChild(de_columns);
 
+    QDomElement de_bookmarks = result->createElement("bookmarksSettings");
+    de_bookmarks.setAttribute("value", visualizationInfo.bookmarksSettings);
+    de_visualizationInfo.appendChild(de_bookmarks);
+
     parent->appendChild(de_visualizationInfo);
 }
 

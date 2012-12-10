@@ -35,6 +35,7 @@ struct VisualizationInfo
 {
     QString columnsSettings;
     QString formatsSettings;
+    QString bookmarksSettings;
 };
 
 struct ProjectInfo
